@@ -82,6 +82,7 @@ class FirestoreService {
   }
 
 //   // Add expense
+// FirestoreService.dart mein:
   Future<void> addExpense({
     required String id,
     required String title,
@@ -90,7 +91,8 @@ class FirestoreService {
     required List<String> splitWith,
     required String groupId,
     required DateTime createdAt,
-    // bool isSettlement = false, // 🔥 ADD
+    int splitType = 0,             // 🔥 ADD THIS
+    Map? customValues,             // 🔥 ADD THIS
   }) async {
     await _db.collection('expenses').doc(id).set({
       'title': title,
@@ -98,11 +100,11 @@ class FirestoreService {
       'paidBy': paidBy,
       'splitWith': splitWith,
       'groupId': groupId,
-      'createdAt': createdAt.toUtc(),
-      // 'isSettlement': isSettlement, // 🔥 SAVE
+      'createdAt': createdAt,
+      'splitType': splitType,      // 🔥 ADD THIS
+      'customValues': customValues,// 🔥 ADD THIS
     });
   }
-
 
   Future<void> addSettlement({
     required String groupId,

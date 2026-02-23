@@ -23,13 +23,15 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       payerId: fields[3] as String,
       involvedParticipantIds: (fields[4] as List).cast<String>(),
       date: fields[5] as DateTime,
+      splitType: fields[6] as SplitType,
+      customValues: (fields[7] as Map?)?.cast<String, double>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, Expense obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -41,7 +43,11 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       ..writeByte(4)
       ..write(obj.involvedParticipantIds)
       ..writeByte(5)
-      ..write(obj.date);
+      ..write(obj.date)
+      ..writeByte(6)
+      ..write(obj.splitType)
+      ..writeByte(7)
+      ..write(obj.customValues);
   }
 
   @override
@@ -51,6 +57,50 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is ExpenseAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class SplitTypeAdapter extends TypeAdapter<SplitType> {
+  @override
+  final int typeId = 4;
+
+  @override
+  SplitType read(BinaryReader reader) {
+    switch (reader.readByte()) {
+      case 0:
+        return SplitType.equal;
+      case 1:
+        return SplitType.percentage;
+      case 2:
+        return SplitType.exact;
+      default:
+        return SplitType.equal;
+    }
+  }
+
+  @override
+  void write(BinaryWriter writer, SplitType obj) {
+    switch (obj) {
+      case SplitType.equal:
+        writer.writeByte(0);
+        break;
+      case SplitType.percentage:
+        writer.writeByte(1);
+        break;
+      case SplitType.exact:
+        writer.writeByte(2);
+        break;
+    }
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is SplitTypeAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
