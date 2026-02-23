@@ -14,7 +14,7 @@ import '../services/firestore_service.dart';
 import 'add_expense_screen.dart';
 import 'summary_screen.dart';
 import 'expense_detail_screen.dart';
-import '../widgets/dialogs/edit_participant_dialog.dart';
+// import '../widgets/dialogs/edit_participant_dialog.dart';
 
 
 class GroupDetailScreen extends StatefulWidget {
@@ -69,40 +69,40 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
 
 
 
-  void _confirmDeleteParticipant(BuildContext context, Participant person,Group group) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Delete Person?"),
-        content: Text("Are you sure you want to delete '${person.name}'?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () async {
-              Navigator.pop(ctx);
-              final error = await Provider.of<GroupService>(
-                context,
-                listen: false,
-              ).deleteParticipant(group, person.id);
+  // void _confirmDeleteParticipant(BuildContext context, Participant person,Group group) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (ctx) => AlertDialog(
+  //       title: const Text("Delete Person?"),
+  //       content: Text("Are you sure you want to delete '${person.name}'?"),
+  //       actions: [
+  //         TextButton(
+  //           onPressed: () => Navigator.pop(ctx),
+  //           child: const Text("Cancel"),
+  //         ),
+  //         TextButton(
+  //           onPressed: () async {
+  //             Navigator.pop(ctx);
+  //             final error = await Provider.of<GroupService>(
+  //               context,
+  //               listen: false,
+  //             ).deleteParticipant(group, person.id);
 
-              if (error != null) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(
-                    context,
-                  ).showSnackBar(SnackBar(content: Text(error)));
-                }
-              }
-            },
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
-            child: const Text("Delete"),
-          ),
-        ],
-      ),
-    );
-  }
+  //             if (error != null) {
+  //               if (context.mounted) {
+  //                 ScaffoldMessenger.of(
+  //                   context,
+  //                 ).showSnackBar(SnackBar(content: Text(error)));
+  //               }
+  //             }
+  //           },
+  //           style: TextButton.styleFrom(foregroundColor: Colors.red),
+  //           child: const Text("Delete"),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
   void _confirmDeleteGroup(BuildContext context,Group group) {
     showDialog(
@@ -376,270 +376,270 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
   }
 
 
-Widget _buildExpensesTab(GroupService service,Group group) {
-  if (group.expenses.isEmpty) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Container(
-            padding: const EdgeInsets.all(24),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              Icons.receipt_long_rounded,
-              size: 48,
-              color: Colors.grey[400],
-            ),
-          ),
-          const SizedBox(height: 24),
-          Text(
-            "No expenses yet",
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[500],
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text("Tap + to add one", style: TextStyle(color: Colors.grey[400])),
-        ],
-      ),
-    );
-  }
+// Widget _buildExpensesTab(GroupService service,Group group) {
+//   if (group.expenses.isEmpty) {
+//     return Center(
+//       child: Column(
+//         mainAxisAlignment: MainAxisAlignment.center,
+//         children: [
+//           Container(
+//             padding: const EdgeInsets.all(24),
+//             decoration: BoxDecoration(
+//               color: Colors.grey[100],
+//               shape: BoxShape.circle,
+//             ),
+//             child: Icon(
+//               Icons.receipt_long_rounded,
+//               size: 48,
+//               color: Colors.grey[400],
+//             ),
+//           ),
+//           const SizedBox(height: 24),
+//           Text(
+//             "No expenses yet",
+//             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+//               color: Colors.grey[500],
+//               fontWeight: FontWeight.w600,
+//             ),
+//           ),
+//           const SizedBox(height: 8),
+//           Text("Tap + to add one", style: TextStyle(color: Colors.grey[400])),
+//         ],
+//       ),
+//     );
+//   }
 
-  double total =  group.expenses.fold(0.0, (sum, e) => sum + e.amount);
+//   double total =  group.expenses.fold(0.0, (sum, e) => sum + e.amount);
 
-  // Group expenses by date
-  final Map<String, List<Expense>> groupedExpenses = {};
-  for (var expense in  group.expenses) {
-    final dateSlug = DateFormat("yyyyMMdd").format(expense.date);
-    if (!groupedExpenses.containsKey(dateSlug)) {
-      groupedExpenses[dateSlug] = [];
-    }
-    groupedExpenses[dateSlug]!.add(expense);
-  }
-  final sortedKeys = groupedExpenses.keys.toList()
-    ..sort((a, b) => b.compareTo(a)); // Newest first
+//   // Group expenses by date
+//   final Map<String, List<Expense>> groupedExpenses = {};
+//   for (var expense in  group.expenses) {
+//     final dateSlug = DateFormat("yyyyMMdd").format(expense.date);
+//     if (!groupedExpenses.containsKey(dateSlug)) {
+//       groupedExpenses[dateSlug] = [];
+//     }
+//     groupedExpenses[dateSlug]!.add(expense);
+//   }
+//   final sortedKeys = groupedExpenses.keys.toList()
+//     ..sort((a, b) => b.compareTo(a)); // Newest first
 
-  return Column(
-    children: [
-      // Fixed Total Spending Card
-      Container(
-        height: 180, // Fixed height for consistency
-        margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
-        padding: const EdgeInsets.all(24),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
-            colors: [
-              Color(0xFF005041), // Deep Emerald
-              Color(0xFF00796B), // Lighter Teal/Green
-            ],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: [
-            BoxShadow(
-              color: const Color(0xFF005041).withOpacity(0.4),
-              blurRadius: 20,
-              offset: const Offset(0, 10),
-            ),
-          ],
-        ),
-        child: Stack(
-          children: [
-            // Decorative Circle
-            Positioned(
-              right: -20,
-              top: -20,
-              child: Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.1),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            Positioned(
-              left: -30,
-              bottom: -30,
-              child: Container(
-                width: 150,
-                height: 150,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.05),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Total Spending",
-                      style: TextStyle(
-                        color: Colors.white70,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    InkWell(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                SummaryScreen(groupId:  group.id),
-                          ),
-                        );
-                      },
-                      borderRadius: BorderRadius.circular(20),
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 14,
-                          vertical: 8,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: Colors.white.withOpacity(0.3),
-                            width: 1,
-                          ),
-                        ),
-                        child: const Row(
-                          children: [
-                            Text(
-                              "Settle Up",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                              ),
-                            ),
-                            SizedBox(width: 4),
-                            Icon(
-                              Icons.arrow_forward_rounded,
-                              color: Colors.white,
-                              size: 16,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const Spacer(),
-                Text(
-                  "₹${total.toStringAsFixed(2)}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 42,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -1,
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  "${ group.expenses.length} transactions",
-                  style: TextStyle(
-                    color: Colors.white.withOpacity(0.6),
-                    fontSize: 14,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
+//   return Column(
+//     children: [
+//       // Fixed Total Spending Card
+//       Container(
+//         height: 180, // Fixed height for consistency
+//         margin: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+//         padding: const EdgeInsets.all(24),
+//         decoration: BoxDecoration(
+//           gradient: const LinearGradient(
+//             colors: [
+//               Color(0xFF005041), // Deep Emerald
+//               Color(0xFF00796B), // Lighter Teal/Green
+//             ],
+//             begin: Alignment.topLeft,
+//             end: Alignment.bottomRight,
+//           ),
+//           borderRadius: BorderRadius.circular(32),
+//           boxShadow: [
+//             BoxShadow(
+//               color: const Color(0xFF005041).withOpacity(0.4),
+//               blurRadius: 20,
+//               offset: const Offset(0, 10),
+//             ),
+//           ],
+//         ),
+//         child: Stack(
+//           children: [
+//             // Decorative Circle
+//             Positioned(
+//               right: -20,
+//               top: -20,
+//               child: Container(
+//                 width: 100,
+//                 height: 100,
+//                 decoration: BoxDecoration(
+//                   color: Colors.white.withOpacity(0.1),
+//                   shape: BoxShape.circle,
+//                 ),
+//               ),
+//             ),
+//             Positioned(
+//               left: -30,
+//               bottom: -30,
+//               child: Container(
+//                 width: 150,
+//                 height: 150,
+//                 decoration: BoxDecoration(
+//                   color: Colors.white.withOpacity(0.05),
+//                   shape: BoxShape.circle,
+//                 ),
+//               ),
+//             ),
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: [
+//                 Row(
+//                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                   children: [
+//                     const Text(
+//                       "Total Spending",
+//                       style: TextStyle(
+//                         color: Colors.white70,
+//                         fontSize: 16,
+//                         fontWeight: FontWeight.w500,
+//                       ),
+//                     ),
+//                     InkWell(
+//                       onTap: () {
+//                         Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                             builder: (_) =>
+//                                 SummaryScreen(groupId:  group.id),
+//                           ),
+//                         );
+//                       },
+//                       borderRadius: BorderRadius.circular(20),
+//                       child: Container(
+//                         padding: const EdgeInsets.symmetric(
+//                           horizontal: 14,
+//                           vertical: 8,
+//                         ),
+//                         decoration: BoxDecoration(
+//                           color: Colors.white.withOpacity(0.2),
+//                           borderRadius: BorderRadius.circular(20),
+//                           border: Border.all(
+//                             color: Colors.white.withOpacity(0.3),
+//                             width: 1,
+//                           ),
+//                         ),
+//                         child: const Row(
+//                           children: [
+//                             Text(
+//                               "Settle Up",
+//                               style: TextStyle(
+//                                 color: Colors.white,
+//                                 fontWeight: FontWeight.bold,
+//                                 fontSize: 13,
+//                               ),
+//                             ),
+//                             SizedBox(width: 4),
+//                             Icon(
+//                               Icons.arrow_forward_rounded,
+//                               color: Colors.white,
+//                               size: 16,
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),
+//                   ],
+//                 ),
+//                 const Spacer(),
+//                 Text(
+//                   "₹${total.toStringAsFixed(2)}",
+//                   style: const TextStyle(
+//                     color: Colors.white,
+//                     fontSize: 42,
+//                     fontWeight: FontWeight.bold,
+//                     letterSpacing: -1,
+//                   ),
+//                 ),
+//                 const SizedBox(height: 4),
+//                 Text(
+//                   "${ group.expenses.length} transactions",
+//                   style: TextStyle(
+//                     color: Colors.white.withOpacity(0.6),
+//                     fontSize: 14,
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ],
+//         ),
+//       ),
 
-      // Scrollable List
-      Expanded(
-        child: ListView.builder(
-          key: const PageStorageKey<String>('expenses'),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-          itemCount: sortedKeys.length + 1, // +1 for spacing at bottom
-          itemBuilder: (context, index) {
-            if (index == sortedKeys.length) {
-              return const SizedBox(height: 80); // Bottom padding for FAB
-            }
+//       // Scrollable List
+//       Expanded(
+//         child: ListView.builder(
+//           key: const PageStorageKey<String>('expenses'),
+//           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+//           itemCount: sortedKeys.length + 1, // +1 for spacing at bottom
+//           itemBuilder: (context, index) {
+//             if (index == sortedKeys.length) {
+//               return const SizedBox(height: 80); // Bottom padding for FAB
+//             }
 
-            final dateHook = sortedKeys[index];
-            final expensesForDay = groupedExpenses[dateHook] ?? [];
-            final date = expensesForDay.first.date;
-            final sortedExpenses = expensesForDay.reversed.toList();
+//             final dateHook = sortedKeys[index];
+//             final expensesForDay = groupedExpenses[dateHook] ?? [];
+//             final date = expensesForDay.first.date;
+//             final sortedExpenses = expensesForDay.reversed.toList();
 
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 12.0,
-                    horizontal: 8,
-                  ),
-                  child: Text(
-                    _formatDateHeader(date),
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                      letterSpacing: 0.5,
-                    ),
-                  ),
-                ),
-                ...sortedExpenses.map((expense) {
-                  final payer =  group.participants.firstWhere(
-                    (p) => p.id == expense.payerId,
-                    orElse: () => Participant(id: 'unknown', name: 'Unknown'),
-                  );
+//             return Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Padding(
+//                   padding: const EdgeInsets.symmetric(
+//                     vertical: 12.0,
+//                     horizontal: 8,
+//                   ),
+//                   child: Text(
+//                     _formatDateHeader(date),
+//                     style: TextStyle(
+//                       fontWeight: FontWeight.bold,
+//                       fontSize: 14,
+//                       color: Colors.grey[600],
+//                       letterSpacing: 0.5,
+//                     ),
+//                   ),
+//                 ),
+//                 ...sortedExpenses.map((expense) {
+//                   final payer =  group.participants.firstWhere(
+//                     (p) => p.id == expense.payerId,
+//                     orElse: () => Participant(id: 'unknown', name: 'Unknown'),
+//                   );
 
-                  return Padding(
-                    padding: const EdgeInsets.only(bottom: 12.0),
-                    child: ExpenseTile(
-                      expense: expense,
-                      payerName: payer.name,
-                      onDelete: () =>
-                          service.deleteExpense(group, expense.id),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => ExpenseDetailScreen(
-                              expense: expense,
-                              group:  group,
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                }),
-              ],
-            );
-          },
-        ),
-      ),
-    ],
-  );
-}
+//                   return Padding(
+//                     padding: const EdgeInsets.only(bottom: 12.0),
+//                     child: ExpenseTile(
+//                       expense: expense,
+//                       payerName: payer.name,
+//                       onDelete: () =>
+//                           service.deleteExpense(group, expense.id),
+//                       onTap: () {
+//                         Navigator.push(
+//                           context,
+//                           MaterialPageRoute(
+//                             builder: (_) => ExpenseDetailScreen(
+//                               expense: expense,
+//                               group:  group,
+//                             ),
+//                           ),
+//                         );
+//                       },
+//                     ),
+//                   );
+//                 }),
+//               ],
+//             );
+//           },
+//         ),
+//       ),
+//     ],
+//   );
+// }
 
-  String _formatDateHeader(DateTime date) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final yesterday = today.subtract(const Duration(days: 1));
-    final dateOnly = DateTime(date.year, date.month, date.day);
+//   String _formatDateHeader(DateTime date) {
+//     final now = DateTime.now();
+//     final today = DateTime(now.year, now.month, now.day);
+//     final yesterday = today.subtract(const Duration(days: 1));
+//     final dateOnly = DateTime(date.year, date.month, date.day);
 
-    if (dateOnly == today) return "TODAY";
-    if (dateOnly == yesterday) return "YESTERDAY";
-    return DateFormat("MMMM d").format(date).toUpperCase();
-  }
+//     if (dateOnly == today) return "TODAY";
+//     if (dateOnly == yesterday) return "YESTERDAY";
+//     return DateFormat("MMMM d").format(date).toUpperCase();
+//   }
 
 
 }

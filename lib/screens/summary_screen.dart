@@ -273,7 +273,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/group.dart';
-import '../models/participant.dart';
+// import '../models/participant.dart';
 import '../services/group_service.dart';
 import '../widgets/settle_up_bottom_sheet.dart';
 

@@ -5,14 +5,28 @@ import '../models/expense.dart';
 import '../models/participant.dart';
 
 class StorageService {
+  // NOTE: Box ka naam ek hi jagah se control hona chahiye.
+  // Pehle init() me 'groups' open ho raha tha aur getGroupBox() me 'groups_box' access ho raha tha.
+  // Is mismatch ki wajah se runtime par box-not-open error aata hai aur UI me groups nahi dikhte.
   static const String boxName = 'groups_box';
 
   Future<void> init() async {
     await Hive.initFlutter();
-    Hive.registerAdapter(GroupAdapter());
-    Hive.registerAdapter(ExpenseAdapter());
-    Hive.registerAdapter(ParticipantAdapter());
-    Hive.registerAdapter(SettlementAdapter());
+
+    // Sabhi adapters ko registration check ke saath
+    if (!Hive.isAdapterRegistered(2)) Hive.registerAdapter(GroupAdapter());
+    if (!Hive.isAdapterRegistered(1)) Hive.registerAdapter(ExpenseAdapter());
+
+    // SplitType (ID 2)
+    if (!Hive.isAdapterRegistered(4)) Hive.registerAdapter(SplitTypeAdapter());
+
+    // Participant (ID 3)
+    if (!Hive.isAdapterRegistered(0)) Hive.registerAdapter(ParticipantAdapter());
+
+    // Settlement (Zaroori hai!)
+    if (!Hive.isAdapterRegistered(3)) Hive.registerAdapter(SettlementAdapter());
+
+    // Box open tabhi karo jab saare adapters register ho jayein
     await Hive.openBox<Group>(boxName);
   }
 
