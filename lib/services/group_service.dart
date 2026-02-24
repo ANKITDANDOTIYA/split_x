@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:split_expenses/models/settlement.dart';
+import 'package:split_expenses/services/notification_service.dart';
 import 'package:uuid/uuid.dart';
 import '../models/group.dart';
 import '../models/participant.dart';
@@ -458,6 +459,16 @@ class GroupService extends ChangeNotifier {
         splitType: splitType.index,
         customValues: customValues,
       );
+
+      // Notification bhej do
+      if (splitWithUserIds.isNotEmpty) {
+        NotificationService.sendExpenseNotification(
+          receiverUserIds: splitWithUserIds,
+          title: title,
+          amount: amount,
+          payerName: payerParticipant.name,
+        );
+      }
     }
     notifyListeners();
   }
@@ -638,7 +649,40 @@ class GroupService extends ChangeNotifier {
         createdAt: settlement.date,
       );
 
+      // 🟢 NAYA: Notification Trigger
+      try {
+        // Payer ka naam (Jo paise de raha hai)
+        final fromP = group.participants.firstWhere(
+          (p) => p.id == fromParticipantId,
+          orElse: () => Participant(id: fromParticipantId, name: 'Someone'),
+        );
+
+        // Receiver ka data (Jise paise mil rahe hain)
+        final toP = group.participants.firstWhere(
+          (p) => p.id == toParticipantId,
+          orElse: () => Participant(id: toParticipantId, name: 'User'),
+        );
+
+        // Receiver ki asli Firebase UID nikal lo
+        final receiverUid = toP.userId ?? toParticipantId;
+        print("Notification target UID: ${toP.userId}");
+
+        // Agar receiver main khud nahi hoon, toh notification bhej do
+        if (receiverUid != user.uid) {
+          print("Notification target UID: ${toP.userId}");
+          NotificationService.sendSettlementNotification(
+            receiverUserId: receiverUid,
+            fromName: fromP.name,
+            amount: amount,
+          );
+        }
+      } catch (e) {
+        debugPrint('Notification bhejne mein error: $e');
+      }
+
     }
+
+    
 
 
     notifyListeners();

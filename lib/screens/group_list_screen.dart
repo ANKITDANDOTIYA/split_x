@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
+import 'package:split_expenses/services/auth_service.dart';
 import '../services/group_service.dart';
 // import '../services/auth_service.dart';
 import '../models/group.dart';
@@ -35,6 +36,10 @@ class _GroupListScreenState extends State<GroupListScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       Provider.of<GroupService>(context, listen: false).loadGroups();
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+    Provider.of<AuthService>(context, listen: false).updateFCMToken();
+  });
   }
 
   @override

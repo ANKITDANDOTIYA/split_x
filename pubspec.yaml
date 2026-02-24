@@ -52,6 +52,11 @@ dependencies:
   # Flowchart dependency
   fl_chart: ^0.66.0
 
+  # Notifications
+  http: ^1.2.0
+  googleapis_auth: ^1.6.0  # Ye v1 ke liye sabse zaroori hai
+  firebase_messaging: ^15.2.10
+
 
 dev_dependencies:
   flutter_test:
@@ -71,6 +76,8 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/service-account.json
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

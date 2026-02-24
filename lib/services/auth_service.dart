@@ -2,6 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
+import 'package:firebase_messaging/firebase_messaging.dart';  
+
+ 
+ 
+
 class AuthService extends ChangeNotifier {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _db = FirebaseFirestore.instance;
@@ -23,6 +28,27 @@ class AuthService extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  Future<void> updateFCMToken() async {
+  final user = _auth.currentUser;
+  if (user == null) return;
+
+  try {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    // Permission mangna
+    await messaging.requestPermission();
+    String? token = await messaging.getToken();
+
+    if (token != null) {
+      await _db.collection('users').doc(user.uid).set({
+        'fcmToken': token,
+        'lastActive': FieldValue.serverTimestamp(),
+      }, SetOptions(merge: true));
+    }
+  } catch (e) {
+    debugPrint("Error updating token: $e");
+  }
+}
 
   // REGISTER: create auth user + Firestore user + send verification
   Future<bool> register({
@@ -102,6 +128,8 @@ class AuthService extends ChangeNotifier {
         return false;
       }
 
+      await updateFCMToken();
+
       _isLoading = false;
       _errorMessage = null;
       notifyListeners();
@@ -116,6 +144,14 @@ class AuthService extends ChangeNotifier {
 
   // Sign out
   Future<void> signOut() async {
+    final user = _auth.currentUser;
+  if (user != null) {
+    // Logout se pehle token delete karo
+    await _db.collection('users').doc(user.uid).update({
+      'fcmToken': FieldValue.delete(),
+    });
+  }
+  
     await _auth.signOut();
     _errorMessage = null;
     notifyListeners();
