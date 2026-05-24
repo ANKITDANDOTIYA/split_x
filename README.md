@@ -80,14 +80,6 @@ Once on the Releases page:
 
 
 
-## 📱 Application Preview
-
-<p align="center">
-  <img src="https://github.com/user-attachments/assets/85f87701-1844-4782-9adb-dcbf060ed5d3"
-       alt="Split Expenses – Flutter App"
-       width="600" />
-</p>
-
 ## 🚀 Getting Started
 
 ### Prerequisites
