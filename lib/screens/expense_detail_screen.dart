@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import '../models/expense.dart';
 import '../models/group.dart';
 import '../models/participant.dart';
+import '../widgets/category_helper.dart';
 
 class ExpenseDetailScreen extends StatelessWidget {
   final Expense expense;
@@ -24,6 +25,9 @@ class ExpenseDetailScreen extends StatelessWidget {
       (p) => p.id == expense.payerId,
       orElse: () => Participant(id: '?', name: 'Unknown'),
     );
+
+    final catIcon = CategoryHelper.getIcon(expense.categoryName);
+    final catColor = CategoryHelper.getColor(expense.categoryName);
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
@@ -56,8 +60,8 @@ class ExpenseDetailScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 35,
-                    backgroundColor: primaryGreen.withOpacity(0.1),
-                    child: Icon(Icons.receipt_long_rounded, size: 35, color: primaryGreen),
+                    backgroundColor: catColor.withOpacity(0.1),
+                    child: Icon(catIcon, size: 35, color: catColor),
                   ),
                   const SizedBox(height: 20),
                   Text(
@@ -81,26 +85,50 @@ class ExpenseDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 25),
                   
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-                    decoration: BoxDecoration(
-                      color: primaryGreen.withOpacity(0.08),
-                      borderRadius: BorderRadius.circular(50),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        CircleAvatar(
-                          radius: 12,
-                          backgroundColor: primaryGreen,
-                          child: Text(payer.name[0].toUpperCase(), 
-                            style: const TextStyle(color: Colors.white, fontSize: 12)),
+                  Wrap(
+                    alignment: WrapAlignment.center,
+                    spacing: 12,
+                    runSpacing: 10,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: primaryGreen.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(50),
                         ),
-                        const SizedBox(width: 10),
-                        Text("Paid by ${payer.name}", 
-                          style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CircleAvatar(
+                              radius: 12,
+                              backgroundColor: primaryGreen,
+                              child: Text(payer.name[0].toUpperCase(), 
+                                style: const TextStyle(color: Colors.white, fontSize: 12)),
+                            ),
+                            const SizedBox(width: 10),
+                            Text("Paid by ${payer.name}", 
+                              style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                        decoration: BoxDecoration(
+                          color: catColor.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(50),
+                          border: Border.all(color: catColor.withOpacity(0.2)),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(catIcon, color: catColor, size: 16),
+                            const SizedBox(width: 8),
+                            Text(expense.categoryName, 
+                              style: TextStyle(color: catColor, fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

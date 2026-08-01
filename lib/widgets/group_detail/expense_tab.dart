@@ -374,8 +374,9 @@ import '../../services/group_service.dart';
 import '../../screens/expense_detail_screen.dart';
 import '../../screens/summary_screen.dart';
 import '../../widgets/expense_tile.dart';
+import '../category_helper.dart';
 
-class ExpensesTab extends StatelessWidget {
+class ExpensesTab extends StatefulWidget {
   final String groupId;
 
   const ExpensesTab({
@@ -384,19 +385,66 @@ class ExpensesTab extends StatelessWidget {
   });
 
   @override
+  State<ExpensesTab> createState() => _ExpensesTabState();
+}
+
+class _ExpensesTabState extends State<ExpensesTab> {
+  String _selectedCategory = 'All';
+
+  Widget _buildFilterChips() {
+    return Container(
+      height: 50,
+      margin: const EdgeInsets.only(top: 8, bottom: 8),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        itemCount: CategoryHelper.categories.length + 1,
+        itemBuilder: (context, index) {
+          final isAll = index == 0;
+          final cat = isAll ? 'All' : CategoryHelper.categories[index - 1];
+          final isSelected = _selectedCategory == cat;
+          final chipColor = isAll ? const Color(0xFF00796B) : CategoryHelper.getColor(cat);
+
+          return Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: FilterChip(
+              label: Text(
+                cat,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : Colors.grey[700],
+                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+              selected: isSelected,
+              showCheckmark: false,
+              selectedColor: chipColor,
+              backgroundColor: Theme.of(context).cardColor,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(20),
+                side: BorderSide(
+                  color: isSelected ? chipColor : Colors.grey.withOpacity(0.2),
+                ),
+              ),
+              onSelected: (selected) {
+                setState(() {
+                  _selectedCategory = cat;
+                });
+              },
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
     final service = context.watch<GroupService>();
 
     /// 🔥 ALWAYS FETCH LATEST GROUP FROM PROVIDER
     final group = service.groups.firstWhere(
-          (g) => g.id == groupId,
+          (g) => g.id == widget.groupId,
       orElse: () => throw Exception("Group not found"),
-    );
-
-    /// 🔥 TOTAL SPENDING (ONLY REAL EXPENSES)
-    double total = group.expenses.fold(
-      0.0,
-          (sum, e) => sum + e.amount,
     );
 
     /// ================= EMPTY STATE =================
@@ -434,11 +482,15 @@ class ExpensesTab extends StatelessWidget {
     final List<_TransactionWrapper> allTransactions = [];
 
     for (var e in group.expenses) {
-      allTransactions.add(_TransactionWrapper.expense(e));
+      if (_selectedCategory == 'All' || e.categoryName == _selectedCategory) {
+        allTransactions.add(_TransactionWrapper.expense(e));
+      }
     }
 
-    for (var s in group.settlements) {
-      allTransactions.add(_TransactionWrapper.settlement(s));
+    if (_selectedCategory == 'All') {
+      for (var s in group.settlements) {
+        allTransactions.add(_TransactionWrapper.settlement(s));
+      }
     }
 
     /// SORT BY DATE DESC
@@ -456,12 +508,55 @@ class ExpensesTab extends StatelessWidget {
     final sortedKeys = grouped.keys.toList()
       ..sort((a, b) => b.compareTo(a));
 
+    if (allTransactions.isEmpty) {
+      return Column(
+        children: [
+          _TotalSpendingCard(
+            expenses: group.expenses,
+            groupId: widget.groupId,
+          ),
+          _buildFilterChips(),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[100],
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      Icons.receipt_long_rounded,
+                      size: 48,
+                      color: Colors.grey[400],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  Text(
+                    "No expenses in $_selectedCategory",
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      color: Colors.grey[500],
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       children: [
         _TotalSpendingCard(
            expenses: group.expenses,
-          groupId: groupId,
+          groupId: widget.groupId,
         ),
+
+        _buildFilterChips(),
 
         Expanded(
           child: ListView.builder(
@@ -669,7 +764,6 @@ class _TotalSpendingCardState extends State<_TotalSpendingCard> {
     DateFormat("MMMM").format(previousMonth);
 
     final difference = currentMonthTotal - previousMonthTotal;
-    final isIncrease = difference >= 0;
 
 
     String comparisonText;

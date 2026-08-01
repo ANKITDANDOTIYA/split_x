@@ -41,6 +41,10 @@ class Expense {
   @HiveField(7)
   final Map<String, double>? customValues;
 
+  // 🔥 NAYA FIELD (Index 8): Expense Category
+  @HiveField(8)
+  final String? category;
+
   Expense({
     required this.id,
     required this.title,
@@ -50,5 +54,8 @@ class Expense {
     required this.date,
     this.splitType = SplitType.equal, // Purane expenses automatically 'equal' ban jayenge
     this.customValues,
+    this.category = 'Others',
   });
+
+  String get categoryName => category ?? 'Others';
 }

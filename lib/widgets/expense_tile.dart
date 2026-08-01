@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/expense.dart';
+import 'category_helper.dart';
 
 class ExpenseTile extends StatelessWidget {
   final Expense expense;
@@ -18,6 +19,9 @@ class ExpenseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final catIcon = CategoryHelper.getIcon(expense.categoryName);
+    final catColor = CategoryHelper.getColor(expense.categoryName);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
       decoration: BoxDecoration(
@@ -69,16 +73,14 @@ class ExpenseTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    color: catColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
-                    Icons.receipt_long,
-
-                    color: Theme.of(context).colorScheme.primary,
+                    catIcon,
+                    color: catColor,
                     size: 24,
                   ),
-
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -89,12 +91,9 @@ class ExpenseTile extends StatelessWidget {
                         expense.title,
                         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                       ),
-
-
-
                       const SizedBox(height: 4),
                       Text(
-                        "Paid by $payerName • ${DateFormat.MMMd().format(expense.date)}",
+                        "Paid by $payerName • ${expense.categoryName} • ${DateFormat.MMMd().format(expense.date)}",
                         style: TextStyle(color: Colors.grey[600], fontSize: 13),
                       ),
 

@@ -147,6 +147,7 @@ class GroupService extends ChangeNotifier {
                         (k, v) => MapEntry(k.toString(), (v as num).toDouble()),
                   )
                       : null,
+                  category: expData['category'] as String? ?? 'Others',
                 );
               }).toList();
 
@@ -237,6 +238,7 @@ class GroupService extends ChangeNotifier {
                           (k, v) => MapEntry(k.toString(), (v as num).toDouble()),
                     )
                         : null,
+                    category: expData['category'] as String? ?? 'Others',
                   );
                 }).toList();
 
@@ -415,6 +417,7 @@ class GroupService extends ChangeNotifier {
       List<String> involvedIds, {
         SplitType splitType = SplitType.equal, // 🔥 NEW
         Map<String, double>? customValues,     // 🔥 NEW
+        String category = 'Others',            // 🔥 NEW: Category parameter
       }) async {
     final user = FirebaseAuth.instance.currentUser;
     final now = DateTime.now();
@@ -428,6 +431,7 @@ class GroupService extends ChangeNotifier {
       date: now,
       splitType: splitType, // 🔥 NEW
       customValues: customValues, // 🔥 NEW
+      category: category,         // 🔥 NEW
     );
     group.expenses.add(newExpense);
     await group.save();
@@ -458,6 +462,7 @@ class GroupService extends ChangeNotifier {
         // 🔥 FIRESTORE MEIN BHI BHEJEIN
         splitType: splitType.index,
         customValues: customValues,
+        category: category,             // 🔥 NEW
       );
 
       // Notification bhej do

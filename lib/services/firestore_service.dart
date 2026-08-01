@@ -93,6 +93,7 @@ class FirestoreService {
     required DateTime createdAt,
     int splitType = 0,             // 🔥 ADD THIS
     Map? customValues,             // 🔥 ADD THIS
+    String? category,              // 🔥 NEW: Category field
   }) async {
     await _db.collection('expenses').doc(id).set({
       'title': title,
@@ -103,6 +104,7 @@ class FirestoreService {
       'createdAt': createdAt,
       'splitType': splitType,      // 🔥 ADD THIS
       'customValues': customValues,// 🔥 ADD THIS
+      'category': category ?? 'Others', // 🔥 NEW: Category field
     });
   }
 

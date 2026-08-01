@@ -239,6 +239,7 @@ import 'package:provider/provider.dart';
 import '../models/expense.dart';
 import '../models/group.dart';
 import '../services/group_service.dart';
+import '../widgets/category_helper.dart';
  
 
 class AddExpenseScreen extends StatefulWidget {
@@ -259,6 +260,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
   SplitType _selectedSplitType = SplitType.equal;
   final Map<String, TextEditingController> _splitControllers = {};
   String? _selectedPayerId;
+  String _selectedCategory = 'Others';
 
   // Custom Green Color from your image
   final Color primaryGreen = const Color(0xFF1B5E4F);
@@ -320,6 +322,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
       widget.group.participants.map((p) => p.id).toList(),
       splitType: _selectedSplitType,
       customValues: _selectedSplitType == SplitType.equal ? null : customValues,
+      category: _selectedCategory,
     );
 
     Navigator.pop(context);
@@ -355,6 +358,56 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 decoration: const InputDecoration(labelText: "Total Amount", prefixText: "₹ "),
                 keyboardType: TextInputType.number,
                 validator: (v) => v!.isEmpty ? "Enter amount" : null,
+              ),
+              const SizedBox(height: 20),
+
+              // 🏷️ Category Selection Dropdown
+              const Text("Category", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const SizedBox(height: 10),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return DropdownMenu<String>(
+                    width: constraints.maxWidth,
+                    initialSelection: _selectedCategory,
+                    menuStyle: MenuStyle(
+                      backgroundColor: WidgetStateProperty.all(Theme.of(context).cardColor),
+                      shape: WidgetStateProperty.all(
+                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      ),
+                      elevation: WidgetStateProperty.all(10),
+                    ),
+                    inputDecorationTheme: InputDecorationTheme(
+                      filled: true,
+                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withOpacity(0.05),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                    ),
+                    onSelected: (String? value) {
+                      if (value != null) {
+                        setState(() => _selectedCategory = value);
+                      }
+                    },
+                    dropdownMenuEntries: CategoryHelper.categories.map((cat) {
+                      final icon = CategoryHelper.getIcon(cat);
+                      final color = CategoryHelper.getColor(cat);
+                      return DropdownMenuEntry<String>(
+                        value: cat,
+                        label: cat,
+                        leadingIcon: Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: color.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(icon, size: 18, color: color),
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
               ),
               const SizedBox(height: 20),
 

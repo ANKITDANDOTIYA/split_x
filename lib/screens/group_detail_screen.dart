@@ -1,19 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:split_expenses/widgets/group_detail/expense_tab.dart';
 import 'package:split_expenses/widgets/group_detail/participant_tab.dart';
 import '../models/group.dart';
-import '../models/expense.dart';
-import '../models/participant.dart';
 import '../services/group_service.dart';
-import '../widgets/expense_tile.dart';
 import '../widgets/add_participant_dialog.dart';
 import '../services/firestore_service.dart';
 import 'add_expense_screen.dart';
 import 'summary_screen.dart';
-import 'expense_detail_screen.dart';
+import 'analytics_screen.dart';
 // import '../widgets/dialogs/edit_participant_dialog.dart';
 
 
@@ -206,6 +202,36 @@ class _GroupDetailScreenState extends State<GroupDetailScreen>
                 ),
               ),
               actions: [
+                Container(
+                  margin: const EdgeInsets.only(right: 8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardTheme.color,
+                    shape: BoxShape.circle,
+                    border: Border.all(color: Colors.grey.withOpacity(0.1)),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                      ),
+                    ],
+                  ),
+                  child: IconButton(
+                    icon: const Icon(
+                      Icons.pie_chart_outline_rounded,
+                      size: 20,
+                    ),
+                    tooltip: "Analytics",
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => AnalyticsScreen(groupId: group.id),
+                        ),
+                      );
+                    },
+                    color: Theme.of(context).iconTheme.color,
+                  ),
+                ),
                 Container(
                   margin: const EdgeInsets.only(right: 8),
                   decoration: BoxDecoration(

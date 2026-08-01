@@ -25,13 +25,14 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       date: fields[5] as DateTime,
       splitType: fields[6] as SplitType,
       customValues: (fields[7] as Map?)?.cast<String, double>(),
+      category: fields[8] as String?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Expense obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(9)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -47,7 +48,9 @@ class ExpenseAdapter extends TypeAdapter<Expense> {
       ..writeByte(6)
       ..write(obj.splitType)
       ..writeByte(7)
-      ..write(obj.customValues);
+      ..write(obj.customValues)
+      ..writeByte(8)
+      ..write(obj.category);
   }
 
   @override
