@@ -251,7 +251,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 decoration: const InputDecoration(
                   labelText: "Total Amount",
                   prefixText: "₹ ",
-                  prefixIcon: Icon(Icons.currency_rupee),
+                  prefixIcon: Icon(Icons.payments_outlined),
                 ),
                 keyboardType: const TextInputType.numberWithOptions(decimal: true),
                 validator: (v) {
