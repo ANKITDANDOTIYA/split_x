@@ -108,18 +108,29 @@ class AuthService extends ChangeNotifier {
           password: password,
         );
 
-        // If not verified, keep user signed in so AuthWrapper can show VerifyEmailScreen
-        if (!cred.user!.emailVerified) {
-          _errorMessage = 'Please verify your email first.';
+        // Reload user to get latest emailVerified status from Firebase servers
+        await cred.user?.reload();
+        final refreshedUser = _auth.currentUser;
+
+        if (refreshedUser != null && !refreshedUser.emailVerified) {
+          _errorMessage = 'Please verify your email address before logging in.';
           _isLoading = false;
           notifyListeners();
           return false;
         }
       } on FirebaseAuthException catch (e) {
-        if (e.code == 'user-not-found') {
-          _errorMessage = 'No account found for this email. Please register.';
+        if (e.code == 'user-not-found' ||
+            e.code == 'invalid-credential' ||
+            e.code == 'INVALID_LOGIN_CREDENTIALS') {
+          _errorMessage = 'Incorrect email or password. Please try again.';
         } else if (e.code == 'wrong-password') {
           _errorMessage = 'Incorrect password. Please try again.';
+        } else if (e.code == 'invalid-email') {
+          _errorMessage = 'Invalid email address format.';
+        } else if (e.code == 'user-disabled') {
+          _errorMessage = 'This user account has been disabled.';
+        } else if (e.code == 'too-many-requests') {
+          _errorMessage = 'Too many failed login attempts. Please try again later.';
         } else {
           _errorMessage = e.message ?? 'Authentication failed.';
         }
@@ -155,6 +166,41 @@ class AuthService extends ChangeNotifier {
     await _auth.signOut();
     _errorMessage = null;
     notifyListeners();
+  }
+
+  // RESET PASSWORD: Send reset link to email
+  Future<bool> sendPasswordResetEmail(String email) async {
+    try {
+      _isLoading = true;
+      _errorMessage = null;
+      notifyListeners();
+
+      final normalizedEmail = email.trim().toLowerCase();
+      await _auth.sendPasswordResetEmail(email: normalizedEmail);
+
+      _isLoading = false;
+      _errorMessage = null;
+      notifyListeners();
+      return true;
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        _errorMessage = 'No account found for this email address.';
+      } else if (e.code == 'invalid-email') {
+        _errorMessage = 'The email address format is invalid.';
+      } else if (e.code == 'too-many-requests') {
+        _errorMessage = 'Too many requests. Please try again later.';
+      } else {
+        _errorMessage = e.message ?? 'Failed to send password reset email.';
+      }
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    } catch (e) {
+      _errorMessage = 'Failed to send reset email. Please try again.';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
   }
 
   // Clear error message
