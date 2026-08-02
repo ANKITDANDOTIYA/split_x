@@ -148,6 +148,8 @@ class GroupService extends ChangeNotifier {
                   )
                       : null,
                   category: expData['category'] as String? ?? 'Others',
+                  notes: expData['notes'] as String?,
+                  updatedAt: (expData['updatedAt'] as Timestamp?)?.toDate(),
                 );
               }).toList();
 
@@ -239,6 +241,8 @@ class GroupService extends ChangeNotifier {
                     )
                         : null,
                     category: expData['category'] as String? ?? 'Others',
+                    notes: expData['notes'] as String?,
+                    updatedAt: (expData['updatedAt'] as Timestamp?)?.toDate(),
                   );
                 }).toList();
 
@@ -415,12 +419,14 @@ class GroupService extends ChangeNotifier {
       double amount,
       String payerId,
       List<String> involvedIds, {
-        SplitType splitType = SplitType.equal, // 🔥 NEW
-        Map<String, double>? customValues,     // 🔥 NEW
-        String category = 'Others',            // 🔥 NEW: Category parameter
+        SplitType splitType = SplitType.equal,
+        Map<String, double>? customValues,
+        String category = 'Others',
+        String? notes,
+        DateTime? date,
       }) async {
     final user = FirebaseAuth.instance.currentUser;
-    final now = DateTime.now();
+    final expenseDate = date ?? DateTime.now();
 
     final newExpense = Expense(
       id: const Uuid().v4(),
@@ -428,10 +434,11 @@ class GroupService extends ChangeNotifier {
       amount: amount,
       payerId: payerId,
       involvedParticipantIds: involvedIds,
-      date: now,
-      splitType: splitType, // 🔥 NEW
-      customValues: customValues, // 🔥 NEW
-      category: category,         // 🔥 NEW
+      date: expenseDate,
+      splitType: splitType,
+      customValues: customValues,
+      category: category,
+      notes: notes,
     );
     group.expenses.add(newExpense);
     await group.save();
@@ -458,11 +465,11 @@ class GroupService extends ChangeNotifier {
         paidBy: paidByUserId,
         splitWith: splitWithUserIds,
         groupId: group.id,
-        createdAt: now,
-        // 🔥 FIRESTORE MEIN BHI BHEJEIN
+        createdAt: expenseDate,
         splitType: splitType.index,
         customValues: customValues,
-        category: category,             // 🔥 NEW
+        category: category,
+        notes: notes,
       );
 
       // Notification bhej do
@@ -476,6 +483,50 @@ class GroupService extends ChangeNotifier {
       }
     }
     notifyListeners();
+  }
+
+  Future<void> updateExpense(
+    Group group,
+    Expense updatedExpense,
+  ) async {
+    final index = group.expenses.indexWhere((e) => e.id == updatedExpense.id);
+    if (index != -1) {
+      group.expenses[index] = updatedExpense;
+      await group.save();
+
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        final payerParticipant = group.participants.firstWhere(
+          (p) => p.id == updatedExpense.payerId,
+          orElse: () => Participant(id: updatedExpense.payerId, name: 'Unknown'),
+        );
+        final paidByUserId = payerParticipant.userId ?? updatedExpense.payerId;
+
+        final splitWithUserIds = updatedExpense.involvedParticipantIds.map((participantId) {
+          final participant = group.participants.firstWhere(
+            (p) => p.id == participantId,
+            orElse: () => Participant(id: participantId, name: 'Unknown'),
+          );
+          return participant.userId ?? participantId;
+        }).toList();
+
+        await _firestoreService.updateExpense(
+          id: updatedExpense.id,
+          title: updatedExpense.title,
+          amount: updatedExpense.amount,
+          paidBy: paidByUserId,
+          splitWith: splitWithUserIds,
+          groupId: group.id,
+          createdAt: updatedExpense.date,
+          splitType: updatedExpense.splitType.index,
+          customValues: updatedExpense.customValues,
+          category: updatedExpense.category,
+          notes: updatedExpense.notes,
+          updatedAt: updatedExpense.updatedAt ?? DateTime.now(),
+        );
+      }
+      notifyListeners();
+    }
   }
 
 
@@ -518,7 +569,7 @@ class GroupService extends ChangeNotifier {
         if (!balances.containsKey(id)) balances[id] = 0.0;
 
         double debt = 0;
-        final type = expense.splitType ?? SplitType.equal;
+        final type = expense.splitType;
 
         if (type == SplitType.equal) {
           debt = expense.amount / expense.involvedParticipantIds.length;

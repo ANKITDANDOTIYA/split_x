@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import '../models/expense.dart';
 import '../models/group.dart';
 import '../models/participant.dart';
+import '../services/group_service.dart';
 import '../widgets/category_helper.dart';
+import 'add_expense_screen.dart';
 
 class ExpenseDetailScreen extends StatelessWidget {
   final Expense expense;
@@ -17,17 +20,27 @@ class ExpenseDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     
     final Color primaryGreen = const Color.fromARGB(255, 43, 136, 116);
     final bool isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final payer = group.participants.firstWhere(
-      (p) => p.id == expense.payerId,
+    final groupService = context.watch<GroupService>();
+    final currentGroup = groupService.groups.firstWhere(
+      (g) => g.id == group.id,
+      orElse: () => group,
+    );
+
+    final currentExpense = currentGroup.expenses.firstWhere(
+      (e) => e.id == expense.id,
+      orElse: () => expense,
+    );
+
+    final payer = currentGroup.participants.firstWhere(
+      (p) => p.id == currentExpense.payerId,
       orElse: () => Participant(id: '?', name: 'Unknown'),
     );
 
-    final catIcon = CategoryHelper.getIcon(expense.categoryName);
-    final catColor = CategoryHelper.getColor(expense.categoryName);
+    final catIcon = CategoryHelper.getIcon(currentExpense.categoryName);
+    final catColor = CategoryHelper.getColor(currentExpense.categoryName);
 
     return Scaffold(
       backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
@@ -36,12 +49,28 @@ class ExpenseDetailScreen extends StatelessWidget {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.edit_rounded),
+            tooltip: "Edit Expense",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => AddExpenseScreen(
+                    group: currentGroup,
+                    expenseToEdit: currentExpense,
+                  ),
+                ),
+              );
+            },
+          ),
+        ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 50),
         child: Column(
           children: [
-             
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(32),
@@ -65,17 +94,24 @@ class ExpenseDetailScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 20),
                   Text(
-                    expense.title,
+                    currentExpense.title,
                     style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    DateFormat.yMMMMd().format(expense.date),
+                    DateFormat.yMMMMd().format(currentExpense.date),
                     style: TextStyle(color: Colors.grey[500], fontSize: 14),
                   ),
+                  if (currentExpense.updatedAt != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      "Edited ${DateFormat.MMMd().add_jm().format(currentExpense.updatedAt!)}",
+                      style: TextStyle(color: Colors.grey[400], fontSize: 12, fontStyle: FontStyle.italic),
+                    ),
+                  ],
                   const SizedBox(height: 25),
                   Text(
-                    "₹${expense.amount.toStringAsFixed(2)}",
+                    "₹${currentExpense.amount.toStringAsFixed(2)}",
                     style: TextStyle(
                       fontSize: 42,
                       fontWeight: FontWeight.w900,
@@ -84,7 +120,7 @@ class ExpenseDetailScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 25),
-                  
+
                   Wrap(
                     alignment: WrapAlignment.center,
                     spacing: 12,
@@ -102,12 +138,16 @@ class ExpenseDetailScreen extends StatelessWidget {
                             CircleAvatar(
                               radius: 12,
                               backgroundColor: primaryGreen,
-                              child: Text(payer.name[0].toUpperCase(), 
-                                style: const TextStyle(color: Colors.white, fontSize: 12)),
+                              child: Text(
+                                payer.name.isNotEmpty ? payer.name[0].toUpperCase() : '?',
+                                style: const TextStyle(color: Colors.white, fontSize: 12),
+                              ),
                             ),
                             const SizedBox(width: 10),
-                            Text("Paid by ${payer.name}", 
-                              style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold)),
+                            Text(
+                              "Paid by ${payer.name}",
+                              style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold),
+                            ),
                           ],
                         ),
                       ),
@@ -123,52 +163,87 @@ class ExpenseDetailScreen extends StatelessWidget {
                           children: [
                             Icon(catIcon, color: catColor, size: 16),
                             const SizedBox(width: 8),
-                            Text(expense.categoryName, 
-                              style: TextStyle(color: catColor, fontWeight: FontWeight.bold)),
+                            Text(
+                              currentExpense.categoryName,
+                              style: TextStyle(color: catColor, fontWeight: FontWeight.bold),
+                            ),
                           ],
                         ),
                       ),
                     ],
                   ),
+
+                  if (currentExpense.notes != null && currentExpense.notes!.trim().isNotEmpty) ...[
+                    const SizedBox(height: 25),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: isDark ? Colors.white.withOpacity(0.05) : const Color(0xFFF5F5F5),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.grey.withOpacity(0.15)),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(Icons.sticky_note_2_outlined, size: 18, color: Colors.grey[600]),
+                              const SizedBox(width: 8),
+                              Text(
+                                "Notes",
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            currentExpense.notes!,
+                            style: const TextStyle(fontSize: 14, height: 1.4),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ],
               ),
             ),
 
             const SizedBox(height: 35),
 
-             
             Align(
               alignment: Alignment.centerLeft,
               child: Text(
-                "Split breakdown (${expense.splitType.name.toUpperCase()})",
+                "Split breakdown (${currentExpense.splitType.name.toUpperCase()})",
                 style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.grey),
               ),
             ),
             const SizedBox(height: 15),
 
             Container(
-              // padding: const EdgeInsets.only(bottom: 20),
               decoration: BoxDecoration(
                 color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
                 borderRadius: BorderRadius.circular(24),
               ),
               child: Column(
-                children: expense.involvedParticipantIds.map((id) {
-                  final person = group.participants.firstWhere(
+                children: currentExpense.involvedParticipantIds.map((id) {
+                  final person = currentGroup.participants.firstWhere(
                     (p) => p.id == id,
                     orElse: () => Participant(id: '?', name: 'Unknown'),
                   );
 
-                  //  CUSTOM LOGIC: Check if split is custom or equal
                   double displayAmount = 0;
-                  if (expense.splitType == SplitType.equal) {
-                    displayAmount = expense.amount / expense.involvedParticipantIds.length;
+                  if (currentExpense.splitType == SplitType.equal) {
+                    displayAmount = currentExpense.amount / currentExpense.involvedParticipantIds.length;
                   } else {
-                    // Custom values (Percentage/Exact) se amount uthao
-                    displayAmount = expense.customValues?[id] ?? 0;
+                    displayAmount = currentExpense.customValues?[id] ?? 0;
                   }
 
-                  bool isLast = id == expense.involvedParticipantIds.last;
+                  bool isLast = id == currentExpense.involvedParticipantIds.last;
 
                   return Column(
                     children: [
@@ -176,13 +251,16 @@ class ExpenseDetailScreen extends StatelessWidget {
                         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                         leading: CircleAvatar(
                           backgroundColor: primaryGreen.withOpacity(0.1),
-                          child: Text(person.name[0], style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold)),
+                          child: Text(
+                            person.name.isNotEmpty ? person.name[0] : '?',
+                            style: TextStyle(color: primaryGreen, fontWeight: FontWeight.bold),
+                          ),
                         ),
                         title: Text(person.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                         subtitle: Text(
-                          person.id == expense.payerId ? "Paid for self" : "Owes ${payer.name}",
+                          person.id == currentExpense.payerId ? "Paid for self" : "Owes ${payer.name}",
                           style: TextStyle(
-                            color: person.id == expense.payerId ? Colors.green : Colors.redAccent,
+                            color: person.id == currentExpense.payerId ? Colors.green : Colors.redAccent,
                             fontSize: 12,
                           ),
                         ),
@@ -203,4 +281,3 @@ class ExpenseDetailScreen extends StatelessWidget {
     );
   }
 }
-  

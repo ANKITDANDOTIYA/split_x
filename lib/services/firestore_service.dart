@@ -94,6 +94,8 @@ class FirestoreService {
     int splitType = 0,             // 🔥 ADD THIS
     Map? customValues,             // 🔥 ADD THIS
     String? category,              // 🔥 NEW: Category field
+    String? notes,
+    DateTime? updatedAt,
   }) async {
     await _db.collection('expenses').doc(id).set({
       'title': title,
@@ -105,6 +107,37 @@ class FirestoreService {
       'splitType': splitType,      // 🔥 ADD THIS
       'customValues': customValues,// 🔥 ADD THIS
       'category': category ?? 'Others', // 🔥 NEW: Category field
+      'notes': notes,
+      'updatedAt': updatedAt,
+    });
+  }
+
+  Future<void> updateExpense({
+    required String id,
+    required String title,
+    required double amount,
+    required String paidBy,
+    required List<String> splitWith,
+    required String groupId,
+    required DateTime createdAt,
+    int splitType = 0,
+    Map? customValues,
+    String? category,
+    String? notes,
+    DateTime? updatedAt,
+  }) async {
+    await _db.collection('expenses').doc(id).update({
+      'title': title,
+      'amount': amount,
+      'paidBy': paidBy,
+      'splitWith': splitWith,
+      'groupId': groupId,
+      'createdAt': createdAt,
+      'splitType': splitType,
+      'customValues': customValues,
+      'category': category ?? 'Others',
+      'notes': notes,
+      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt) : FieldValue.serverTimestamp(),
     });
   }
 

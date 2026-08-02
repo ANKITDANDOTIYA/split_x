@@ -45,6 +45,14 @@ class Expense {
   @HiveField(8)
   final String? category;
 
+  // 🔥 NAYA FIELD (Index 9): Expense Notes
+  @HiveField(9)
+  final String? notes;
+
+  // 🔥 NAYA FIELD (Index 10): Last Updated Timestamp
+  @HiveField(10)
+  final DateTime? updatedAt;
+
   Expense({
     required this.id,
     required this.title,
@@ -55,6 +63,8 @@ class Expense {
     this.splitType = SplitType.equal, // Purane expenses automatically 'equal' ban jayenge
     this.customValues,
     this.category = 'Others',
+    this.notes,
+    this.updatedAt,
   });
 
   String get categoryName => category ?? 'Others';
