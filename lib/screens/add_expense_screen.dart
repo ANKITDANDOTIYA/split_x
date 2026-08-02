@@ -228,9 +228,10 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
+      body: SafeArea(
+        child: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -525,6 +526,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
           ),
         ),
       ),
+    ),
     );
   }
 }
