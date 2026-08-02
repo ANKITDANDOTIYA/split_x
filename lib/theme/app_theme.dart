@@ -131,8 +131,6 @@ class AppTheme {
       onSecondary: Colors.white,
       error: errorColor,
       onError: Colors.white,
-      background: const Color(0xFFFFFFFF),
-      onBackground: const Color(0xFF1A1C18),
       surface: const Color(0xFFF8F9FA),
       onSurface: const Color(0xFF1A1C18),
     );
@@ -141,12 +139,12 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: colorScheme.surface,
 
       textTheme: GoogleFonts.outfitTextTheme(
         ThemeData.light().textTheme.apply(
-          bodyColor: colorScheme.onBackground,
-          displayColor: colorScheme.onBackground,
+          bodyColor: colorScheme.onSurface,
+          displayColor: colorScheme.onSurface,
         ),
       ),
 
@@ -156,9 +154,9 @@ class AppTheme {
         titleTextStyle: GoogleFonts.outfit(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: colorScheme.onBackground,
+          color: colorScheme.onSurface,
         ),
-        iconTheme: IconThemeData(color: colorScheme.onBackground),
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
 
       cardTheme: CardThemeData(
@@ -216,8 +214,6 @@ class AppTheme {
       onSecondary: const Color(0xFF0F1F24),
       error: const Color(0xFFEF5350),
       onError: Colors.black,
-      background: const Color(0xFF0F1210),
-      onBackground: const Color(0xFFE6EDE9),
       surface: const Color(0xFF1A1F1C),
       onSurface: const Color(0xFFE6EDE9),
     );
@@ -226,12 +222,12 @@ class AppTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.background,
+      scaffoldBackgroundColor: const Color(0xFF0F1210),
 
       textTheme: GoogleFonts.outfitTextTheme(
         ThemeData.dark().textTheme.apply(
-          bodyColor: colorScheme.onBackground,
-          displayColor: colorScheme.onBackground,
+          bodyColor: colorScheme.onSurface,
+          displayColor: colorScheme.onSurface,
         ),
       ),
 
@@ -241,9 +237,9 @@ class AppTheme {
         titleTextStyle: GoogleFonts.outfit(
           fontSize: 24,
           fontWeight: FontWeight.bold,
-          color: colorScheme.onBackground,
+          color: colorScheme.onSurface,
         ),
-        iconTheme: IconThemeData(color: colorScheme.onBackground),
+        iconTheme: IconThemeData(color: colorScheme.onSurface),
       ),
 
       cardTheme: CardThemeData(

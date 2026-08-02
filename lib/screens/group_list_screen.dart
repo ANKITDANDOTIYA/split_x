@@ -98,7 +98,7 @@ class _GroupListScreenState extends State<GroupListScreen>
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                         colors: [
-                          Theme.of(context).colorScheme.primary.withOpacity(0.15),
+                          Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                           Theme.of(context).colorScheme.surface,
                         ],
                       ),
@@ -112,7 +112,7 @@ class _GroupListScreenState extends State<GroupListScreen>
                   Container(
                     margin: const EdgeInsets.only(right: 6),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.15),
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
@@ -325,8 +325,8 @@ class _GroupListScreenState extends State<GroupListScreen>
                         ),
                         decoration: BoxDecoration(
                           color: group.expenses.isEmpty
-                              ? Colors.orange.withOpacity(0.15)
-                              : Colors.green.withOpacity(0.15),
+                              ? Colors.orange.withValues(alpha: 0.15)
+                              : Colors.green.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(

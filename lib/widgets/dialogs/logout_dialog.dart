@@ -29,7 +29,7 @@ import 'package:split_expenses/services/auth_service.dart';
              // Icon
              CircleAvatar(
                radius: 28,
-               backgroundColor: Colors.redAccent.withOpacity(0.15),
+               backgroundColor: Colors.redAccent.withValues(alpha: 0.15),
                child: const Icon(
                  Icons.logout_rounded,
                  color: Colors.redAccent,

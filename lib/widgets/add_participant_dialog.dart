@@ -203,7 +203,7 @@ class _AddParticipantDialogState extends State<AddParticipantDialog> {
             color: isSelected ? Colors.white : Colors.transparent,
             borderRadius: BorderRadius.circular(12),
             boxShadow: isSelected
-                ? [BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)]
+                ? [BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 4)]
                 : null,
           ),
           child: Column(
@@ -334,7 +334,7 @@ class _AddParticipantDialogState extends State<AddParticipantDialog> {
                         
                         return ListTile(
                           leading: CircleAvatar(
-                            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                            backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                             child: Text(
                               contact.displayName.isNotEmpty
                                   ? contact.displayName[0].toUpperCase()

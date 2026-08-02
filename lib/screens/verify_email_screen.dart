@@ -139,7 +139,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       height: 80,
                       decoration: BoxDecoration(
                         color:
-                        theme.colorScheme.primary.withOpacity(0.12),
+                        theme.colorScheme.primary.withValues(alpha: 0.12),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(
@@ -168,7 +168,7 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       textAlign: TextAlign.center,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color:
-                        theme.colorScheme.onSurface.withOpacity(0.6),
+                        theme.colorScheme.onSurface.withValues(alpha: 0.6),
                       ),
                     ),
 

@@ -422,7 +422,7 @@ class _ExpensesTabState extends State<ExpensesTab> {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
                 side: BorderSide(
-                  color: isSelected ? chipColor : Colors.grey.withOpacity(0.2),
+                  color: isSelected ? chipColor : Colors.grey.withValues(alpha: 0.2),
                 ),
               ),
               onSelected: (selected) {
@@ -698,9 +698,9 @@ class _SettlementTile extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.05),
+        color: Colors.green.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.green.withOpacity(0.2)),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -804,7 +804,7 @@ class _TotalSpendingCardState extends State<_TotalSpendingCard> {
         children: [
 
           /// Decorative circles
-          Positioned( right: -20, top: -20, child: Container( width: 100, height: 100, decoration: BoxDecoration( color: Colors.white.withOpacity(0.1), shape: BoxShape.circle, ), ), ), Positioned( left: -30, bottom: -30, child: Container( width: 150, height: 150, decoration: BoxDecoration( color: Colors.white.withOpacity(0.05), shape: BoxShape.circle, ), ), ),
+          Positioned( right: -20, top: -20, child: Container( width: 100, height: 100, decoration: BoxDecoration( color: Colors.white.withValues(alpha: 0.1), shape: BoxShape.circle, ), ), ), Positioned( left: -30, bottom: -30, child: Container( width: 150, height: 150, decoration: BoxDecoration( color: Colors.white.withValues(alpha: 0.05), shape: BoxShape.circle, ), ), ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -900,7 +900,7 @@ class _TotalSpendingCardState extends State<_TotalSpendingCard> {
                         vertical: 8,
                       ),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
+                        color: Colors.white.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: const Text(

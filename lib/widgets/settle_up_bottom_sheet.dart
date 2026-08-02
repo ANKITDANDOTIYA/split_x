@@ -155,7 +155,8 @@ class _SettleUpBottomSheetState extends State<SettleUpBottomSheet> {
     final service = Provider.of<GroupService>(context, listen: false);
     final theme = Theme.of(context);
 
-    return Padding(
+    return SingleChildScrollView(
+      physics: const BouncingScrollPhysics(),
       padding: EdgeInsets.only(
         left: 20,
         right: 20,
@@ -203,7 +204,7 @@ class _SettleUpBottomSheetState extends State<SettleUpBottomSheet> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withOpacity(0.06),
+              color: theme.colorScheme.primary.withValues(alpha: 0.06),
               borderRadius: BorderRadius.circular(16),
             ),
             child: TextField(

@@ -108,7 +108,9 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     surface: Colors.white,
                     onSurface: Colors.black87,
                   ),
-            dialogBackgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            dialogTheme: DialogThemeData(
+              backgroundColor: isDark ? const Color(0xFF1E1E1E) : Colors.white,
+            ),
             datePickerTheme: DatePickerThemeData(
               headerBackgroundColor: primaryGreen,
               headerForegroundColor: Colors.white,
@@ -272,7 +274,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
                   decoration: BoxDecoration(
-                    color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withOpacity(0.05),
+                    color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -308,7 +310,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     ),
                     inputDecorationTheme: InputDecorationTheme(
                       filled: true,
-                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withOpacity(0.05),
+                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -329,7 +331,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         leadingIcon: Container(
                           padding: const EdgeInsets.all(4),
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.1),
+                            color: color.withValues(alpha: 0.1),
                             shape: BoxShape.circle,
                           ),
                           child: Icon(icon, size: 18, color: color),
@@ -358,7 +360,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                     ),
                     inputDecorationTheme: InputDecorationTheme(
                       filled: true,
-                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withOpacity(0.05),
+                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -374,7 +376,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                         label: p.name,
                         leadingIcon: CircleAvatar(
                           radius: 12,
-                          backgroundColor: primaryGreen.withOpacity(0.1),
+                          backgroundColor: primaryGreen.withValues(alpha: 0.1),
                           child: Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
                               style: TextStyle(fontSize: 10, color: primaryGreen)),
                         ),
@@ -391,7 +393,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
               const SizedBox(height: 8),
               Container(
                 decoration: BoxDecoration(
-                  color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withOpacity(0.05),
+                  color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Column(
@@ -473,7 +475,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                             suffixText: _selectedSplitType == SplitType.percentage ? "%" : null,
                             isDense: true,
                             filled: true,
-                            fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withOpacity(0.05),
+                            fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(8),
                               borderSide: BorderSide.none,
@@ -497,7 +499,7 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
                   hintText: "Add any additional details or notes...",
                   prefixIcon: const Icon(Icons.note_alt_outlined),
                   filled: true,
-                  fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withOpacity(0.05),
+                  fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: BorderSide.none,

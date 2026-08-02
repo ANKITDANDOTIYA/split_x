@@ -27,10 +27,10 @@ class ExpenseTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
+            color: Colors.black.withValues(alpha: 0.02),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -73,7 +73,7 @@ class ExpenseTile extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: catColor.withOpacity(0.1),
+                    color: catColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Icon(
