@@ -105,17 +105,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 children: [
                     // 🌟 App Branding Badge
                     Container(
-                      width: 72,
-                      height: 72,
+                      width: 76,
+                      height: 76,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            theme.colorScheme.primary,
-                            theme.colorScheme.primary.withValues(alpha: 0.8),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -125,10 +117,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           )
                         ],
                       ),
-                      child: Icon(
-                        Icons.person_add_alt_1_outlined,
-                        size: 36,
-                        color: theme.colorScheme.onPrimary,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(38),
+                        child: Image.asset(
+                          'assets/images/app_logo.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 20),

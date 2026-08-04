@@ -70,17 +70,9 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: [
                     // 🌟 App Branding / Logo
                     Container(
-                      width: 80,
-                      height: 80,
+                      width: 84,
+                      height: 84,
                       decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            theme.colorScheme.primary,
-                            theme.colorScheme.primary.withValues(alpha: 0.8),
-                          ],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
                         shape: BoxShape.circle,
                         boxShadow: [
                           BoxShadow(
@@ -90,10 +82,12 @@ class _LoginScreenState extends State<LoginScreen> {
                           )
                         ],
                       ),
-                      child: Icon(
-                        Icons.account_balance_wallet_outlined,
-                        size: 40,
-                        color: theme.colorScheme.onPrimary,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(42),
+                        child: Image.asset(
+                          'assets/images/app_logo.png',
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 24),

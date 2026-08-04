@@ -1,11 +1,11 @@
 {
-    "name": "split_expenses",
-    "short_name": "split_expenses",
+    "name": "Split Expenses",
+    "short_name": "Split Expenses",
     "start_url": ".",
     "display": "standalone",
-    "background_color": "#0175C2",
-    "theme_color": "#0175C2",
-    "description": "A new Flutter project.",
+    "background_color": "#0F766E",
+    "theme_color": "#16A34A",
+    "description": "Easily track, split bills & settle up group expenses.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
