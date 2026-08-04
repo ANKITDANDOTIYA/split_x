@@ -3,11 +3,13 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import '../providers/profile_provider.dart';
+import '../providers/theme_provider.dart';
 import '../services/group_service.dart';
 import '../services/auth_service.dart';
 import '../widgets/profile/profile_header.dart';
 import '../widgets/profile/profile_tile.dart';
 import '../widgets/profile/profile_dialogs.dart';
+import '../widgets/theme_selection_dialog.dart';
 import '../widgets/dialogs/logout_dialog.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -166,10 +168,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 title: "Version",
                                 subtitle: "1.0.0+1 (Build 1)",
                               ),
-                              ProfileTile(
-                                leadingIcon: Icons.palette_outlined,
-                                title: "Theme Mode",
-                                subtitle: "System Default (Adaptive Light/Dark)",
+                              Consumer<ThemeProvider>(
+                                builder: (context, themeProvider, child) {
+                                  return ProfileTile(
+                                    leadingIcon: Icons.palette_outlined,
+                                    title: "Theme Mode",
+                                    subtitle: "${themeProvider.themeModeName} (Tap to change)",
+                                    onTap: () => ThemeSelectionDialog.show(context),
+                                  );
+                                },
                               ),
                               ProfileTile(
                                 leadingIcon: Icons.privacy_tip_outlined,

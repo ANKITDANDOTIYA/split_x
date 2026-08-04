@@ -4,7 +4,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'services/group_service.dart';
 import 'services/auth_service.dart';
+import 'services/theme_service.dart';
 import 'providers/profile_provider.dart';
+import 'providers/theme_provider.dart';
 import 'storage/storage_service.dart';
 import 'screens/group_list_screen.dart';
 import 'screens/login_screen.dart';
@@ -20,6 +22,8 @@ void main() async {
   final storageService = StorageService();
   await storageService.init();
 
+  final themeService = ThemeService();
+  await themeService.init();
 
   bool firebaseReady = false;
   String? firebaseError;
@@ -36,10 +40,6 @@ void main() async {
     debugPrint('Firebase initialization error: $e');
   }
 
-  // Initialize storage (Hive)
-  // final storageService = StorageService();
-  // await storageService.init();
-
   runApp(
     MultiProvider(
       providers: [
@@ -47,6 +47,7 @@ void main() async {
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => GroupService()..loadGroups()),
         ChangeNotifierProvider(create: (_) => ProfileProvider()),
+        ChangeNotifierProvider(create: (_) => ThemeProvider()),
       ],
       child: MyApp(firebaseReady: firebaseReady, firebaseError: firebaseError),
     ),
@@ -61,16 +62,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Mini Splitwise',
-      debugShowCheckedModeBanner: false,
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ThemeMode.system,
-      home: AuthWrapper(
-        firebaseReady: firebaseReady,
-        firebaseError: firebaseError,
-      ),
+    return Consumer<ThemeProvider>(
+      builder: (context, themeProvider, child) {
+        return MaterialApp(
+          title: 'Mini Splitwise',
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.lightTheme,
+          darkTheme: AppTheme.darkTheme,
+          themeMode: themeProvider.themeMode,
+          home: AuthWrapper(
+            firebaseReady: firebaseReady,
+            firebaseError: firebaseError,
+          ),
+        );
+      },
     );
   }
 }
