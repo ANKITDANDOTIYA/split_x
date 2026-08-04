@@ -50,7 +50,8 @@ releases/*.aab
 
 # Firebase
 android/app/google-services.json
-firebase.json
+ 
 assets/service-account.json
+.firebase/
 
 
