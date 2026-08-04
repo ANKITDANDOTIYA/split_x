@@ -436,7 +436,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ProfileDialogs.showInfoModal(
       context,
       "Privacy Policy",
-      "Your privacy is important to us. Split Expenses uses secure Firebase Cloud Authentication and encrypted Firestore storage to sync your group bill data.\n\n"
+      "Your privacy is important to us. SplitX uses secure Firebase Cloud Authentication and encrypted Firestore storage to sync your group bill data.\n\n"
       "1. Data Collection: We store your name, email, and expense details strictly to perform bill splitting and group calculations.\n"
       "2. Data Security: All network communication is protected with SSL/TLS encryption.\n"
       "3. Third Parties: We do not sell or share your personal data with third-party advertisers.",
@@ -447,7 +447,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     ProfileDialogs.showInfoModal(
       context,
       "Terms & Conditions",
-      "By using Split Expenses, you agree to these terms:\n\n"
+      "By using SplitX, you agree to these terms:\n\n"
       "1. Responsible Use: You agree to keep accurate expense records and maintain your account credentials securely.\n"
       "2. Calculations: While we strive for absolute accuracy in bill splitting calculations, users should double-check custom split ratios.\n"
       "3. Account Integrity: Users are responsible for any activities originating from their account.",
@@ -457,8 +457,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _showAboutApp(BuildContext context) {
     ProfileDialogs.showInfoModal(
       context,
-      "About Split Expenses",
-      "Split Expenses (Mini Splitwise)\nVersion 1.0.0+1\n\n"
+      "About SplitX",
+      "SplitX (Smart Expense Manager)\nVersion 1.0.0+1\n\n"
       "Designed to effortlessly manage shared expenses with friends, family, and roommates.\n\n"
       "Features:\n"
       "• Equal & Custom Percentage/Exact Bill Splitting\n"

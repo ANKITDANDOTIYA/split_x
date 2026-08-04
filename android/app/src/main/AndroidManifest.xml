@@ -4,7 +4,7 @@
     <uses-permission android:name="android.permission.WRITE_CONTACTS" />
     
     <application
-        android:label="split_expenses"
+        android:label="SplitX"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

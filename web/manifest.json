@@ -1,11 +1,11 @@
 {
-    "name": "Split Expenses",
-    "short_name": "Split Expenses",
+    "name": "SplitX",
+    "short_name": "SplitX",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0F766E",
     "theme_color": "#16A34A",
-    "description": "Easily track, split bills & settle up group expenses.",
+    "description": "SplitX - Smart expense sharing, bill splitting & group settlements.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
