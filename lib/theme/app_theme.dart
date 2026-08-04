@@ -127,19 +127,23 @@ class AppTheme {
       brightness: Brightness.light,
       primary: primaryColor,
       onPrimary: Colors.white,
+      primaryContainer: const Color(0xFFE0F2FE),
+      onPrimaryContainer: const Color(0xFF003D33),
       secondary: secondaryColor,
       onSecondary: Colors.white,
+      secondaryContainer: const Color(0xFFF1F5F9),
+      onSecondaryContainer: const Color(0xFF334155),
       error: errorColor,
       onError: Colors.white,
-      surface: const Color(0xFFF8F9FA),
-      onSurface: const Color(0xFF1A1C18),
+      surface: Colors.white,
+      onSurface: const Color(0xFF0F172A),
     );
 
     return ThemeData(
       useMaterial3: true,
       brightness: Brightness.light,
       colorScheme: colorScheme,
-      scaffoldBackgroundColor: colorScheme.surface,
+      scaffoldBackgroundColor: const Color(0xFFF8FAFC),
 
       textTheme: GoogleFonts.outfitTextTheme(
         ThemeData.light().textTheme.apply(
@@ -160,10 +164,15 @@ class AppTheme {
       ),
 
       cardTheme: CardThemeData(
-        color: colorScheme.surface,
-        elevation: 0,
+        color: Colors.white,
+        elevation: 2,
+        shadowColor: const Color(0xFF0F172A).withValues(alpha: 0.06),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
+          side: BorderSide(
+            color: const Color(0xFFE2E8F0),
+            width: 1,
+          ),
         ),
       ),
 
@@ -180,7 +189,7 @@ class AppTheme {
 
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: const Color(0xFFF2F2F2),
+        fillColor: const Color(0xFFF1F5F9),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
           borderSide: BorderSide.none,

@@ -295,53 +295,55 @@ class SummaryScreen extends StatelessWidget {
 
         return Scaffold(
           appBar: AppBar(title: const Text("Balances & Settlement")),
-          body: SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text(
-                  "How to settle up:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.teal,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                ..._buildSettlementCards(
-                  context: context,
-                  group: group,
-                  balances: balances,
-                ),
-
-                const Divider(height: 48, thickness: 2),
-
-                const Text(
-                  "Net Balances:",
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.teal,
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                ...group.participants.map((p) {
-                  final bal = balances[p.id] ?? 0.0;
-                  return ListTile(
-                    title: Text(p.name),
-                    trailing: Text(
-                      "${bal >= 0 ? '+' : ''}₹${bal.toStringAsFixed(2)}",
-                      style: TextStyle(
-                        color: bal >= 0 ? Colors.green : Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
+          body: SafeArea(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "How to settle up:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
                     ),
-                  );
-                }),
-              ],
+                  ),
+                  const SizedBox(height: 16),
+
+                  ..._buildSettlementCards(
+                    context: context,
+                    group: group,
+                    balances: balances,
+                  ),
+
+                  const Divider(height: 48, thickness: 2),
+
+                  const Text(
+                    "Net Balances:",
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.teal,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  ...group.participants.map((p) {
+                    final bal = balances[p.id] ?? 0.0;
+                    return ListTile(
+                      title: Text(p.name),
+                      trailing: Text(
+                        "${bal >= 0 ? '+' : ''}₹${bal.toStringAsFixed(2)}",
+                        style: TextStyle(
+                          color: bal >= 0 ? Colors.green : Colors.red,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    );
+                  }),
+                ],
+              ),
             ),
           ),
         );

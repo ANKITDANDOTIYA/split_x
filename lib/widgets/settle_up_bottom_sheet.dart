@@ -155,138 +155,142 @@ class _SettleUpBottomSheetState extends State<SettleUpBottomSheet> {
     final service = Provider.of<GroupService>(context, listen: false);
     final theme = Theme.of(context);
 
-    return SingleChildScrollView(
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.only(
-        left: 20,
-        right: 20,
-        top: 12,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 45,
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // drag handle
-          Container(
-            width: 42,
-            height: 4,
-            margin: const EdgeInsets.only(bottom: 20),
-            decoration: BoxDecoration(
-              color: Colors.grey[400],
-              borderRadius: BorderRadius.circular(2),
+    return SafeArea(
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.only(
+          left: 20,
+          right: 20,
+          top: 12,
+          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // drag handle
+            Container(
+              width: 42,
+              height: 4,
+              margin: const EdgeInsets.only(bottom: 20),
+              decoration: BoxDecoration(
+                color: Colors.grey[400],
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
-          ),
 
-          Text(
-            "Settle Up",
-            style: theme.textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-
-          const SizedBox(height: 24),
-
-          // From → To info
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              _AvatarChip(name: widget.fromParticipant.name),
-              const SizedBox(width: 8),
-              const Icon(Icons.arrow_forward, size: 18, color: Colors.grey),
-              const SizedBox(width: 8),
-              _AvatarChip(name: widget.toParticipant.name),
-            ],
-          ),
-
-          const SizedBox(height: 24),
-
-          // Amount field (highlighted)
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary.withValues(alpha: 0.06),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: TextField(
-              controller: _amountController,
-              keyboardType: TextInputType.number,
-              style: const TextStyle(
-                fontSize: 28,
+            Text(
+              "Settle Up",
+              style: theme.textTheme.titleLarge?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
-              decoration: const InputDecoration(
-                prefixText: "₹ ",
-                prefixStyle: TextStyle(
+            ),
+
+            const SizedBox(height: 24),
+
+            // From → To info
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                _AvatarChip(name: widget.fromParticipant.name),
+                const SizedBox(width: 8),
+                const Icon(Icons.arrow_forward, size: 18, color: Colors.grey),
+                const SizedBox(width: 8),
+                _AvatarChip(name: widget.toParticipant.name),
+              ],
+            ),
+
+            const SizedBox(height: 24),
+
+            // Amount field (highlighted)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.primary.withValues(alpha: 0.06),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: TextField(
+                controller: _amountController,
+                keyboardType: TextInputType.number,
+                style: const TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
                 ),
-                hintText: "0.00",
-                border: InputBorder.none,
+                decoration: const InputDecoration(
+                  prefixText: "₹ ",
+                  prefixStyle: TextStyle(
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  hintText: "0.00",
+                  border: InputBorder.none,
+                ),
               ),
             ),
-          ),
 
-          const SizedBox(height: 28),
+            const SizedBox(height: 28),
 
-          // Buttons
-          Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+            // Buttons
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    style: OutlinedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
+                    onPressed: () => Navigator.pop(context),
+                    child: const Text("Cancel"),
                   ),
-                  onPressed: () => Navigator.pop(context),
-                  child: const Text("Cancel"),
                 ),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    // backgroundColor: Colors.green,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 14),
+                      // backgroundColor: Colors.green,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
                     ),
-                  ),
-                  onPressed: () async {
-                    final amount =
-                    double.tryParse(_amountController.text);
+                    onPressed: () async {
+                      final amount =
+                      double.tryParse(_amountController.text);
 
-                    if (amount == null || amount <= 0) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Enter a valid amount"),
-                        ),
+                      if (amount == null || amount <= 0) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text("Enter a valid amount"),
+                          ),
+                        );
+                        return;
+                      }
+
+                      await service.settleUp(
+                        group: widget.group,
+                        fromParticipantId: widget.fromParticipant.id,
+                        toParticipantId: widget.toParticipant.id,
+                        amount: amount,
                       );
-                      return;
-                    }
 
-                    await service.settleUp(
-                      group: widget.group,
-                      fromParticipantId: widget.fromParticipant.id,
-                      toParticipantId: widget.toParticipant.id,
-                      amount: amount,
-                    );
-
-                    Navigator.pop(context);
-                  },
-                  child: const Text(
-                    "Confirm Payment",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                      }
+                    },
+                    child: const Text(
+                      "Confirm Payment",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

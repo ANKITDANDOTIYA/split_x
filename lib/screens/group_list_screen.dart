@@ -61,6 +61,9 @@ class _GroupListScreenState extends State<GroupListScreen>
   // ================= MAIN BUILD =================
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Scaffold(
       extendBodyBehindAppBar: true,
 
@@ -83,8 +86,9 @@ class _GroupListScreenState extends State<GroupListScreen>
                   titlePadding: const EdgeInsets.only(left: 20, bottom: 16),
                   title: Text(
                     "My Groups",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
+                      color: theme.colorScheme.onSurface,
                     ),
                   ),
                   stretchModes: const [
@@ -98,10 +102,15 @@ class _GroupListScreenState extends State<GroupListScreen>
                       gradient: LinearGradient(
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
-                        colors: [
-                          Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
-                          Theme.of(context).colorScheme.surface,
-                        ],
+                        colors: isDark
+                            ? [
+                                theme.colorScheme.primary.withValues(alpha: 0.2),
+                                theme.colorScheme.surface,
+                              ]
+                            : [
+                                theme.colorScheme.primary.withValues(alpha: 0.12),
+                                theme.scaffoldBackgroundColor,
+                              ],
                       ),
                     ),
                   ),
@@ -113,7 +122,7 @@ class _GroupListScreenState extends State<GroupListScreen>
                   Container(
                     margin: const EdgeInsets.only(right: 6),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
@@ -126,7 +135,10 @@ class _GroupListScreenState extends State<GroupListScreen>
                           ),
                         );
                       },
-                      icon: const Icon(Icons.person_outline_rounded),
+                      icon: Icon(
+                        Icons.person_outline_rounded,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                   ),
 
@@ -134,13 +146,16 @@ class _GroupListScreenState extends State<GroupListScreen>
                   Container(
                     margin: const EdgeInsets.only(right: 6),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                      color: theme.colorScheme.primary.withValues(alpha: 0.12),
                       shape: BoxShape.circle,
                     ),
                     child: IconButton(
                       tooltip: "Add group",
                       onPressed: () => showAddGroupBottomSheet(context),
-                      icon: const Icon(Icons.add_rounded),
+                      icon: Icon(
+                        Icons.add_rounded,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
                   ),
 
@@ -218,23 +233,26 @@ class _GroupListScreenState extends State<GroupListScreen>
                         Icon(
                           Icons.groups_outlined,
                           size: 80,
-                          color: Colors.grey[300],
+                          color: isDark ? Colors.grey[700] : Colors.grey[400],
                         ),
                         const SizedBox(height: 16),
                         Text(
                           "No groups yet",
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(height: 8),
-                        const Text(
+                        Text(
                           "Create one to start splitting bills",
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(
+                            color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                          ),
                         ),
                         const SizedBox(height: 24),
                         ElevatedButton.icon(
-          onPressed: () => showAddGroupBottomSheet(context),
-
-          icon: const Icon(Icons.add),
+                          onPressed: () => showAddGroupBottomSheet(context),
+                          icon: const Icon(Icons.add),
                           label: const Text("Create Group"),
                         ),
                       ],
@@ -248,7 +266,7 @@ class _GroupListScreenState extends State<GroupListScreen>
                   padding: const EdgeInsets.all(16),
                   sliver: SliverList(
                     delegate: SliverChildBuilderDelegate(
-                          (context, index) {
+                      (context, index) {
                         final group = service.groups[index];
                         return _buildGroupCard(
                           context,
@@ -275,6 +293,9 @@ class _GroupListScreenState extends State<GroupListScreen>
       int index,
       GroupService service,
       ) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     // 🆕 staggered animation
     final animation = CurvedAnimation(
       parent: _controller,
@@ -305,19 +326,15 @@ class _GroupListScreenState extends State<GroupListScreen>
             );
           },
 
+          onLongPress: () {
+            showDeleteGroupBottomSheet(
+              context: context,
+              groupName: group.name,
+              onDelete: () => service.deleteGroup(group.id),
+            );
+          },
 
-
-            onLongPress: () {
-              showDeleteGroupBottomSheet(
-                context: context,
-                groupName: group.name,
-                onDelete: () => service.deleteGroup(group.id),
-              );
-            },
-
-
-
-            child: Padding(
+          child: Padding(
             padding: const EdgeInsets.all(20),
             child: Row(
               children: [
@@ -326,17 +343,22 @@ class _GroupListScreenState extends State<GroupListScreen>
                   width: 60,
                   height: 60,
                   decoration: BoxDecoration(
-                    color:
-                    Theme.of(context).colorScheme.primaryContainer,
+                    color: isDark
+                        ? theme.colorScheme.primary.withValues(alpha: 0.2)
+                        : theme.colorScheme.primary.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: theme.colorScheme.primary.withValues(alpha: 0.2),
+                      width: 1,
+                    ),
                   ),
                   child: Center(
                     child: Text(
-                      group.name[0].toUpperCase(),
+                      group.name.isNotEmpty ? group.name[0].toUpperCase() : '?',
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
-                        // color: Theme.of(context).colorScheme.primary,
+                        color: theme.colorScheme.primary,
                       ),
                     ),
                   ),
@@ -350,28 +372,30 @@ class _GroupListScreenState extends State<GroupListScreen>
                     children: [
                       Text(
                         group.name,
-                        style: const TextStyle(
-                          fontSize: 18,
+                        style: theme.textTheme.titleMedium?.copyWith(
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         "${group.expenses.length} expenses • ${group.participants.length} people",
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(
+                          fontSize: 13,
+                          color: theme.colorScheme.onSurface.withValues(alpha: 0.6),
+                        ),
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 8),
 
                       // 🆕 STATUS BADGE
                       Container(
                         padding: const EdgeInsets.symmetric(
-                          horizontal: 8,
+                          horizontal: 10,
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
                           color: group.expenses.isEmpty
-                              ? Colors.orange.withValues(alpha: 0.15)
-                              : Colors.green.withValues(alpha: 0.15),
+                              ? Colors.amber.withValues(alpha: isDark ? 0.2 : 0.15)
+                              : const Color(0xFF10B981).withValues(alpha: isDark ? 0.2 : 0.15),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -379,11 +403,11 @@ class _GroupListScreenState extends State<GroupListScreen>
                               ? "No expenses"
                               : "Active",
                           style: TextStyle(
-                            fontSize: 10,
-                            fontWeight: FontWeight.bold,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
                             color: group.expenses.isEmpty
-                                ? Colors.orange
-                                : Colors.green,
+                                ? (isDark ? Colors.amber[300] : const Color(0xFFD97706))
+                                : (isDark ? Colors.green[300] : const Color(0xFF059669)),
                           ),
                         ),
                       ),
@@ -393,7 +417,11 @@ class _GroupListScreenState extends State<GroupListScreen>
 
                 Text(
                   DateFormat.MMMd().format(group.createdAt),
-                  style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                  style: TextStyle(
+                    color: theme.colorScheme.onSurface.withValues(alpha: 0.45),
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ],
             ),
