@@ -297,6 +297,7 @@ class SummaryScreen extends StatelessWidget {
           appBar: AppBar(title: const Text("Balances & Settlement")),
           body: SafeArea(
             child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
