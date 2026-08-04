@@ -275,6 +275,7 @@ import 'package:provider/provider.dart';
 import '../models/group.dart';
 // import '../models/participant.dart';
 import '../services/group_service.dart';
+import '../widgets/responsive_center.dart';
 import '../widgets/settle_up_bottom_sheet.dart';
 
 class SummaryScreen extends StatelessWidget {
@@ -296,12 +297,14 @@ class SummaryScreen extends StatelessWidget {
         return Scaffold(
           appBar: AppBar(title: const Text("Balances & Settlement")),
           body: SafeArea(
-            child: SingleChildScrollView(
-              physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
+            child: ResponsiveCenter(
+              maxWidth: 800,
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
                   const Text(
                     "How to settle up:",
                     style: TextStyle(
@@ -347,7 +350,8 @@ class SummaryScreen extends StatelessWidget {
               ),
             ),
           ),
-        );
+        ),
+      );
       },
     );
   }

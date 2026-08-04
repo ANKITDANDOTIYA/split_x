@@ -496,14 +496,17 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final crossAxisCount = constraints.maxWidth > 600 ? 3 : 2;
+        final isDesktop = MediaQuery.of(context).size.width >= 900;
+        final crossAxisCount = isDesktop ? 3 : (constraints.maxWidth > 600 ? 3 : 2);
+        final aspectRatio = isDesktop ? 1.6 : 1.55;
+
         return GridView.count(
           crossAxisCount: crossAxisCount,
           shrinkWrap: true,
           physics: const NeverScrollableScrollPhysics(),
-          mainAxisSpacing: 12,
-          crossAxisSpacing: 12,
-          childAspectRatio: 1.55,
+          mainAxisSpacing: isDesktop ? 16 : 12,
+          crossAxisSpacing: isDesktop ? 16 : 12,
+          childAspectRatio: aspectRatio,
           children: [
             // Total Expenses
             _buildStatCard(
@@ -574,15 +577,18 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
     required Color color,
     required bool isDark,
   }) {
+    final isDesktop = MediaQuery.of(context).size.width >= 900;
+
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: EdgeInsets.all(isDesktop ? 20 : 14),
       decoration: BoxDecoration(
         color: isDark ? const Color(0xFF1E1E1E) : Colors.white,
         borderRadius: BorderRadius.circular(20),
+        border: isDesktop ? Border.all(color: Colors.grey.withValues(alpha: 0.15)) : null,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
-            blurRadius: 8,
+            blurRadius: isDesktop ? 10 : 8,
           )
         ],
       ),
@@ -597,7 +603,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontSize: 12,
+                    fontSize: isDesktop ? 15 : 12,
                     fontWeight: FontWeight.w600,
                     color: Colors.grey[500],
                   ),
@@ -605,32 +611,35 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.all(6),
+                padding: EdgeInsets.all(isDesktop ? 10 : 6),
                 decoration: BoxDecoration(
                   color: color.withValues(alpha: 0.12),
                   shape: BoxShape.circle,
                 ),
-                child: Icon(icon, color: color, size: 16),
+                child: Icon(icon, color: color, size: isDesktop ? 22 : 16),
               ),
             ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                value,
-                style: GoogleFonts.outfit(
-                  fontSize: 17,
-                  fontWeight: FontWeight.bold,
-                  color: isDark ? Colors.white : Colors.black87,
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  value,
+                  style: GoogleFonts.outfit(
+                    fontSize: isDesktop ? 24 : 17,
+                    fontWeight: FontWeight.bold,
+                    color: isDark ? Colors.white : Colors.black87,
+                  ),
+                  maxLines: 1,
                 ),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
               ),
               const SizedBox(height: 2),
               Text(
                 subtitle,
-                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                style: TextStyle(fontSize: isDesktop ? 13 : 11, color: Colors.grey[500]),
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),

@@ -262,22 +262,64 @@ class _GroupListScreenState extends State<GroupListScreen>
 
               // ================= GROUP LIST =================
               else
-                SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: SliverList(
-                    delegate: SliverChildBuilderDelegate(
-                      (context, index) {
-                        final group = service.groups[index];
-                        return _buildGroupCard(
-                          context,
-                          group,
-                          index,
-                          service,
-                        );
-                      },
-                      childCount: service.groups.length,
-                    ),
-                  ),
+                Builder(
+                  builder: (context) {
+                    final screenWidth = MediaQuery.of(context).size.width;
+                    final isDesktop = screenWidth >= 900;
+
+                    if (isDesktop) {
+                      final crossAxisCount = screenWidth > 1200 ? 3 : 2;
+                      return SliverToBoxAdapter(
+                        child: Center(
+                          child: ConstrainedBox(
+                            constraints: const BoxConstraints(maxWidth: 1200),
+                            child: Padding(
+                              padding: const EdgeInsets.all(24),
+                              child: GridView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: crossAxisCount,
+                                  childAspectRatio: screenWidth > 1200 ? 2.8 : 2.5,
+                                  crossAxisSpacing: 20,
+                                  mainAxisSpacing: 20,
+                                ),
+                                itemCount: service.groups.length,
+                                itemBuilder: (context, index) {
+                                  final group = service.groups[index];
+                                  return _buildGroupCard(
+                                    context,
+                                    group,
+                                    index,
+                                    service,
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Mobile Layout (UNTOUCHED)
+                    return SliverPadding(
+                      padding: const EdgeInsets.all(16),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final group = service.groups[index];
+                            return _buildGroupCard(
+                              context,
+                              group,
+                              index,
+                              service,
+                            );
+                          },
+                          childCount: service.groups.length,
+                        ),
+                      ),
+                    );
+                  },
                 ),
             ],
           );
@@ -315,8 +357,18 @@ class _GroupListScreenState extends State<GroupListScreen>
         );
       },
       child: Card(
+        clipBehavior: Clip.antiAlias,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(24),
+          side: BorderSide(
+            color: Colors.grey.withValues(alpha: isDark ? 0.15 : 0.1),
+          ),
+        ),
         child: InkWell(
           borderRadius: BorderRadius.circular(24),
+          hoverColor: MediaQuery.of(context).size.width >= 900
+              ? theme.colorScheme.primary.withValues(alpha: 0.04)
+              : null,
           onTap: () {
             Navigator.push(
               context,

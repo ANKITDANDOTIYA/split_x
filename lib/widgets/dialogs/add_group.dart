@@ -103,6 +103,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../services/group_service.dart';
+import '../responsive_center.dart';
 
 Future<void> showAddGroupBottomSheet(BuildContext context) {
   final TextEditingController controller = TextEditingController();
@@ -122,11 +123,13 @@ Future<void> showAddGroupBottomSheet(BuildContext context) {
         ),
         child: SafeArea(
           top: false,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
+          child: ResponsiveCenter(
+            maxWidth: 500,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 24),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
                 // Handle
                 Container(
                   width: 40,
@@ -187,7 +190,8 @@ Future<void> showAddGroupBottomSheet(BuildContext context) {
             ),
           ),
         ),
-      );
+      ),
+    );
     },
   );
 }

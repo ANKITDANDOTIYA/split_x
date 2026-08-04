@@ -6,6 +6,7 @@ import '../models/group.dart';
 import '../models/participant.dart';
 import '../services/group_service.dart';
 import '../widgets/category_helper.dart';
+import '../widgets/responsive_center.dart';
 import 'add_expense_screen.dart';
 
 class ExpenseDetailScreen extends StatelessWidget {
@@ -67,14 +68,13 @@ class ExpenseDetailScreen extends StatelessWidget {
           ),
         ],
       ),
-      body: Center(
+      body: ResponsiveCenter(
+        maxWidth: 700,
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           padding: const EdgeInsets.only(top: 24, left: 24, right: 24, bottom: 50),
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
-            child: Column(
-              children: [
+          child: Column(
+            children: [
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(32),
@@ -283,7 +283,6 @@ class ExpenseDetailScreen extends StatelessWidget {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

@@ -130,6 +130,7 @@ import 'package:provider/provider.dart';
 import '../models/group.dart';
 import '../models/participant.dart';
 import '../services/group_service.dart';
+import 'responsive_center.dart';
 
 class SettleUpBottomSheet extends StatefulWidget {
   final Group group;
@@ -156,15 +157,17 @@ class _SettleUpBottomSheetState extends State<SettleUpBottomSheet> {
     final theme = Theme.of(context);
 
     return SafeArea(
-      child: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        padding: EdgeInsets.only(
-          left: 20,
-          right: 20,
-          top: 12,
-          bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-        ),
-        child: Column(
+      child: ResponsiveCenter(
+        maxWidth: 500,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          padding: EdgeInsets.only(
+            left: 20,
+            right: 20,
+            top: 12,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             // drag handle
@@ -292,6 +295,7 @@ class _SettleUpBottomSheetState extends State<SettleUpBottomSheet> {
           ],
         ),
       ),
+    ),
     );
   }
 }

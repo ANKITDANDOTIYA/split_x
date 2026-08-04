@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../services/auth_service.dart';
+import '../widgets/responsive_center.dart';
 import 'register_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -59,15 +60,14 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         backgroundColor: isDark ? const Color(0xFF121212) : const Color(0xFFF8F9FA),
         body: SafeArea(
-          child: Center(
+          child: ResponsiveCenter(
+            maxWidth: 500,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 460),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                     // 🌟 App Branding / Logo
                     Container(
                       width: 80,
@@ -312,7 +312,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ),
-      ),
-    );
+      );
   }
 }

@@ -75,6 +75,7 @@
 //
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../widgets/responsive_center.dart';
 import 'login_screen.dart';
 import 'group_list_screen.dart';
 
@@ -124,9 +125,10 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
     return Scaffold(
       appBar: AppBar(),
       body: SafeArea(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(24),
+        child: ResponsiveCenter(
+          maxWidth: 500,
+          padding: const EdgeInsets.all(24),
+          child: SingleChildScrollView(
             child: Card(
               child: Padding(
                 padding: const EdgeInsets.all(28),

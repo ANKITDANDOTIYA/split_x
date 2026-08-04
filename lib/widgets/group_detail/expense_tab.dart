@@ -549,7 +549,9 @@ class _ExpensesTabState extends State<ExpensesTab> {
       );
     }
 
-    return Column(
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    final content = Column(
       children: [
         _TotalSpendingCard(
            expenses: group.expenses,
@@ -647,6 +649,17 @@ class _ExpensesTabState extends State<ExpensesTab> {
         ),
       ],
     );
+
+    if (screenWidth >= 900) {
+      return Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 1200),
+          child: content,
+        ),
+      );
+    }
+
+    return content;
   }
 
   static String _formatDateHeader(DateTime date) {

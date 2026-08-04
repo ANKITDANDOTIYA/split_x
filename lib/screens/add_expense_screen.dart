@@ -5,6 +5,7 @@ import '../models/expense.dart';
 import '../models/group.dart';
 import '../services/group_service.dart';
 import '../widgets/category_helper.dart';
+import '../widgets/responsive_center.dart';
 
 class AddExpenseScreen extends StatefulWidget {
   final Group group;
@@ -231,304 +232,307 @@ class _AddExpenseScreenState extends State<AddExpenseScreen> {
         ),
       ),
       body: SafeArea(
-        child: Form(
-          key: _formKey,
-          child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: "Description (e.g. Dinner)",
-                  prefixIcon: Icon(Icons.description_outlined),
-                ),
-                validator: (v) => (v == null || v.trim().isEmpty) ? "Enter a title" : null,
-              ),
-              const SizedBox(height: 15),
+        child: ResponsiveCenter(
+          maxWidth: 650,
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextFormField(
+                    controller: _titleController,
+                    decoration: const InputDecoration(
+                      labelText: "Description (e.g. Dinner)",
+                      prefixIcon: Icon(Icons.description_outlined),
+                    ),
+                    validator: (v) => (v == null || v.trim().isEmpty) ? "Enter a title" : null,
+                  ),
+                  const SizedBox(height: 15),
 
-              TextFormField(
-                controller: _amountController,
-                decoration: const InputDecoration(
-                  labelText: "Total Amount",
-                  prefixText: "₹ ",
-                  prefixIcon: Icon(Icons.payments_outlined),
-                ),
-                keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                validator: (v) {
-                  if (v == null || v.trim().isEmpty) return "Enter amount";
-                  final numVal = double.tryParse(v);
-                  if (numVal == null || numVal <= 0) return "Enter a valid amount > 0";
-                  return null;
-                },
-              ),
-              const SizedBox(height: 20),
+                  TextFormField(
+                    controller: _amountController,
+                    decoration: const InputDecoration(
+                      labelText: "Total Amount",
+                      prefixText: "₹ ",
+                      prefixIcon: Icon(Icons.payments_outlined),
+                    ),
+                    keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                    validator: (v) {
+                      if (v == null || v.trim().isEmpty) return "Enter amount";
+                      final numVal = double.tryParse(v);
+                      if (numVal == null || numVal <= 0) return "Enter a valid amount > 0";
+                      return null;
+                    },
+                  ),
+                  const SizedBox(height: 20),
 
-              // Date Picker Field
-              const Text("Date", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const SizedBox(height: 8),
-              InkWell(
-                onTap: _selectDate,
-                borderRadius: BorderRadius.circular(12),
-                child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-                  decoration: BoxDecoration(
-                    color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
+                  // Date Picker Field
+                  const Text("Date", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 8),
+                  InkWell(
+                    onTap: _selectDate,
                     borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      Icon(Icons.calendar_today_rounded, color: primaryGreen, size: 20),
-                      const SizedBox(width: 12),
-                      Text(
-                        DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
-                      ),
-                      const Spacer(),
-                      const Icon(Icons.edit, size: 16, color: Colors.grey),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 20),
-
-              // 🏷️ Category Selection Dropdown
-              const Text("Category", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const SizedBox(height: 10),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  return DropdownMenu<String>(
-                    width: constraints.maxWidth,
-                    initialSelection: _selectedCategory,
-                    menuStyle: MenuStyle(
-                      backgroundColor: WidgetStateProperty.all(Theme.of(context).cardColor),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-                      ),
-                      elevation: WidgetStateProperty.all(10),
-                    ),
-                    inputDecorationTheme: InputDecorationTheme(
-                      filled: true,
-                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
-                      border: OutlineInputBorder(
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                      decoration: BoxDecoration(
+                        color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                    ),
-                    onSelected: (String? value) {
-                      if (value != null) {
-                        setState(() => _selectedCategory = value);
-                      }
-                    },
-                    dropdownMenuEntries: CategoryHelper.categories.map((cat) {
-                      final icon = CategoryHelper.getIcon(cat);
-                      final color = CategoryHelper.getColor(cat);
-                      return DropdownMenuEntry<String>(
-                        value: cat,
-                        label: cat,
-                        leadingIcon: Container(
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: color.withValues(alpha: 0.1),
-                            shape: BoxShape.circle,
+                      child: Row(
+                        children: [
+                          Icon(Icons.calendar_today_rounded, color: primaryGreen, size: 20),
+                          const SizedBox(width: 12),
+                          Text(
+                            DateFormat('EEEE, MMMM d, yyyy').format(_selectedDate),
+                            style: const TextStyle(fontSize: 15, fontWeight: FontWeight.w500),
                           ),
-                          child: Icon(icon, size: 18, color: color),
-                        ),
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
-
-              // Who Paid Dropdown
-              const Text("Who paid?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const SizedBox(height: 10),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  return DropdownMenu<String>(
-                    width: constraints.maxWidth,
-                    initialSelection: _selectedPayerId,
-                    menuStyle: MenuStyle(
-                      backgroundColor: WidgetStateProperty.all(Theme.of(context).cardColor),
-                      shape: WidgetStateProperty.all(
-                        RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          const Spacer(),
+                          const Icon(Icons.edit, size: 16, color: Colors.grey),
+                        ],
                       ),
-                      elevation: WidgetStateProperty.all(10),
                     ),
-                    inputDecorationTheme: InputDecorationTheme(
-                      filled: true,
-                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        borderSide: BorderSide.none,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
-                    ),
-                    onSelected: (String? value) {
-                      setState(() => _selectedPayerId = value);
-                    },
-                    dropdownMenuEntries: widget.group.participants.map((p) {
-                      return DropdownMenuEntry<String>(
-                        value: p.id,
-                        label: p.name,
-                        leadingIcon: CircleAvatar(
-                          radius: 12,
-                          backgroundColor: primaryGreen.withValues(alpha: 0.1),
-                          child: Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
-                              style: TextStyle(fontSize: 10, color: primaryGreen)),
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Category Selection Dropdown
+                  const Text("Category", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 10),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownMenu<String>(
+                        width: constraints.maxWidth,
+                        initialSelection: _selectedCategory,
+                        menuStyle: MenuStyle(
+                          backgroundColor: WidgetStateProperty.all(Theme.of(context).cardColor),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          ),
+                          elevation: WidgetStateProperty.all(10),
                         ),
-                      );
-                    }).toList(),
-                  );
-                },
-              ),
-
-              const SizedBox(height: 20),
-
-              // Participants Multi-select Section
-              const Text("Split with", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const SizedBox(height: 8),
-              Container(
-                decoration: BoxDecoration(
-                  color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  children: widget.group.participants.map((p) {
-                    final isSelected = _selectedParticipantIds.contains(p.id);
-                    return CheckboxListTile(
-                      activeColor: primaryGreen,
-                      title: Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600)),
-                      value: isSelected,
-                      onChanged: (bool? value) {
-                        setState(() {
-                          if (value == true) {
-                            _selectedParticipantIds.add(p.id);
-                          } else {
-                            if (_selectedParticipantIds.length > 1) {
-                              _selectedParticipantIds.remove(p.id);
-                            } else {
-                              _showSnackBar("At least one participant must be selected!");
-                            }
+                        inputDecorationTheme: InputDecorationTheme(
+                          filled: true,
+                          fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        ),
+                        onSelected: (String? value) {
+                          if (value != null) {
+                            setState(() => _selectedCategory = value);
                           }
-                        });
-                      },
-                    );
-                  }).toList(),
-                ),
-              ),
-
-              const SizedBox(height: 25),
-              const Text("How to split?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-              const SizedBox(height: 10),
-
-              Center(
-                child: SegmentedButton<SplitType>(
-                  segments: const [
-                    ButtonSegment(value: SplitType.equal, label: Text("Equally"), icon: Icon(Icons.group)),
-                    ButtonSegment(value: SplitType.percentage, label: Text("Perc"), icon: Icon(Icons.percent)),
-                    ButtonSegment(value: SplitType.exact, label: Text("Fixed"), icon: Icon(Icons.currency_rupee)),
-                  ],
-                  selected: {_selectedSplitType},
-                  onSelectionChanged: (val) => setState(() => _selectedSplitType = val.first),
-                ),
-              ),
-
-              const SizedBox(height: 20),
-              const Divider(),
-
-              if (_selectedSplitType == SplitType.equal)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 20),
-                  child: Center(child: Text("Bill will be split equally among selected members.")),
-                )
-              else
-                ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: involvedParticipants.length,
-                  itemBuilder: (context, index) {
-                    final p = involvedParticipants[index];
-                    return ListTile(
-                      title: Text(p.name),
-                      trailing: SizedBox(
-                        width: 100,
-                        child: TextField(
-                          controller: _splitControllers[p.id],
-                          textAlign: TextAlign.right,
-                          keyboardType: const TextInputType.numberWithOptions(decimal: true),
-                          onTap: () {
-                            if (_splitControllers[p.id]?.text == '0') {
-                              setState(() {
-                                _splitControllers[p.id]!.text = '';
-                              });
-                            }
-                          },
-                          onChanged: (value) {
-                            setState(() {});
-                          },
-                          decoration: InputDecoration(
-                            prefixText: _selectedSplitType == SplitType.percentage ? null : "₹ ",
-                            suffixText: _selectedSplitType == SplitType.percentage ? "%" : null,
-                            isDense: true,
-                            filled: true,
-                            fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
+                        },
+                        dropdownMenuEntries: CategoryHelper.categories.map((cat) {
+                          final icon = CategoryHelper.getIcon(cat);
+                          final color = CategoryHelper.getColor(cat);
+                          return DropdownMenuEntry<String>(
+                            value: cat,
+                            label: cat,
+                            leadingIcon: Container(
+                              padding: const EdgeInsets.all(4),
+                              decoration: BoxDecoration(
+                                color: color.withValues(alpha: 0.1),
+                                shape: BoxShape.circle,
+                              ),
+                              child: Icon(icon, size: 18, color: color),
                             ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+
+                  // Who Paid Dropdown
+                  const Text("Who paid?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 10),
+                  LayoutBuilder(
+                    builder: (context, constraints) {
+                      return DropdownMenu<String>(
+                        width: constraints.maxWidth,
+                        initialSelection: _selectedPayerId,
+                        menuStyle: MenuStyle(
+                          backgroundColor: WidgetStateProperty.all(Theme.of(context).cardColor),
+                          shape: WidgetStateProperty.all(
+                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
                           ),
+                          elevation: WidgetStateProperty.all(10),
                         ),
+                        inputDecorationTheme: InputDecorationTheme(
+                          filled: true,
+                          fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide.none,
+                          ),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                        ),
+                        onSelected: (String? value) {
+                          setState(() => _selectedPayerId = value);
+                        },
+                        dropdownMenuEntries: widget.group.participants.map((p) {
+                          return DropdownMenuEntry<String>(
+                            value: p.id,
+                            label: p.name,
+                            leadingIcon: CircleAvatar(
+                              radius: 12,
+                              backgroundColor: primaryGreen.withValues(alpha: 0.1),
+                              child: Text(p.name.isNotEmpty ? p.name[0].toUpperCase() : '?',
+                                  style: TextStyle(fontSize: 10, color: primaryGreen)),
+                            ),
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+
+                  const SizedBox(height: 20),
+
+                  // Participants Multi-select Section
+                  const Text("Split with", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 8),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      children: widget.group.participants.map((p) {
+                        final isSelected = _selectedParticipantIds.contains(p.id);
+                        return CheckboxListTile(
+                          activeColor: primaryGreen,
+                          title: Text(p.name, style: const TextStyle(fontWeight: FontWeight.w600)),
+                          value: isSelected,
+                          onChanged: (bool? value) {
+                            setState(() {
+                              if (value == true) {
+                                _selectedParticipantIds.add(p.id);
+                              } else {
+                                if (_selectedParticipantIds.length > 1) {
+                                  _selectedParticipantIds.remove(p.id);
+                                } else {
+                                  _showSnackBar("At least one participant must be selected!");
+                                }
+                              }
+                            });
+                          },
+                        );
+                      }).toList(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+                  const Text("How to split?", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  const SizedBox(height: 10),
+
+                  Center(
+                    child: SegmentedButton<SplitType>(
+                      segments: const [
+                        ButtonSegment(value: SplitType.equal, label: Text("Equally"), icon: Icon(Icons.group)),
+                        ButtonSegment(value: SplitType.percentage, label: Text("Perc"), icon: Icon(Icons.percent)),
+                        ButtonSegment(value: SplitType.exact, label: Text("Fixed"), icon: Icon(Icons.currency_rupee)),
+                      ],
+                      selected: {_selectedSplitType},
+                      onSelectionChanged: (val) => setState(() => _selectedSplitType = val.first),
+                    ),
+                  ),
+
+                  const SizedBox(height: 20),
+                  const Divider(),
+
+                  if (_selectedSplitType == SplitType.equal)
+                    const Padding(
+                      padding: EdgeInsets.symmetric(vertical: 20),
+                      child: Center(child: Text("Bill will be split equally among selected members.")),
+                    )
+                  else
+                    ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: involvedParticipants.length,
+                      itemBuilder: (context, index) {
+                        final p = involvedParticipants[index];
+                        return ListTile(
+                          title: Text(p.name),
+                          trailing: SizedBox(
+                            width: 100,
+                            child: TextField(
+                              controller: _splitControllers[p.id],
+                              textAlign: TextAlign.right,
+                              keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                              onTap: () {
+                                if (_splitControllers[p.id]?.text == '0') {
+                                  setState(() {
+                                    _splitControllers[p.id]!.text = '';
+                                  });
+                                }
+                              },
+                              onChanged: (value) {
+                                setState(() {});
+                              },
+                              decoration: InputDecoration(
+                                prefixText: _selectedSplitType == SplitType.percentage ? null : "₹ ",
+                                suffixText: _selectedSplitType == SplitType.percentage ? "%" : null,
+                                isDense: true,
+                                filled: true,
+                                fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+
+                  const SizedBox(height: 20),
+
+                  // Notes Field
+                  TextFormField(
+                    controller: _notesController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      labelText: "Notes (Optional)",
+                      hintText: "Add any additional details or notes...",
+                      prefixIcon: const Icon(Icons.note_alt_outlined),
+                      filled: true,
+                      fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none,
                       ),
-                    );
-                  },
-                ),
-
-              const SizedBox(height: 20),
-
-              // Notes Field
-              TextFormField(
-                controller: _notesController,
-                maxLines: 3,
-                decoration: InputDecoration(
-                  labelText: "Notes (Optional)",
-                  hintText: "Add any additional details or notes...",
-                  prefixIcon: const Icon(Icons.note_alt_outlined),
-                  filled: true,
-                  fillColor: isLight ? const Color(0xFFF1F3F4) : Colors.white.withValues(alpha: 0.05),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide.none,
+                    ),
                   ),
-                ),
+
+                  const SizedBox(height: 30),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _saveExpense,
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.all(16),
+                        backgroundColor: primaryGreen,
+                        foregroundColor: Colors.white,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      ),
+                      child: Text(
+                        isEditing ? "UPDATE EXPENSE" : "SAVE EXPENSE",
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-
-              const SizedBox(height: 30),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _saveExpense,
-                  style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.all(16),
-                    backgroundColor: primaryGreen,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                  ),
-                  child: Text(
-                    isEditing ? "UPDATE EXPENSE" : "SAVE EXPENSE",
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
-    ),
     );
   }
 }

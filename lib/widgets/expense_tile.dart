@@ -21,13 +21,14 @@ class ExpenseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final catIcon = CategoryHelper.getIcon(expense.categoryName);
     final catColor = CategoryHelper.getColor(expense.categoryName);
+    final isDesktop = MediaQuery.of(context).size.width >= 900;
 
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 4, vertical: 0),
       decoration: BoxDecoration(
         color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.1)),
+        border: Border.all(color: Colors.grey.withValues(alpha: isDesktop ? 0.15 : 0.1)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.02),
@@ -40,6 +41,7 @@ class ExpenseTile extends StatelessWidget {
         color: Colors.transparent,
         child: InkWell(
           onTap: onTap,
+          hoverColor: isDesktop ? Theme.of(context).primaryColor.withValues(alpha: 0.04) : null,
           onLongPress: onDelete != null
             ? () {
                 showDialog(
@@ -67,11 +69,11 @@ class ExpenseTile extends StatelessWidget {
             : null,
           borderRadius: BorderRadius.circular(16),
           child: Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(isDesktop ? 20.0 : 16.0),
             child: Row(
               children: [
                 Container(
-                  padding: const EdgeInsets.all(12),
+                  padding: EdgeInsets.all(isDesktop ? 14 : 12),
                   decoration: BoxDecoration(
                     color: catColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -79,22 +81,28 @@ class ExpenseTile extends StatelessWidget {
                   child: Icon(
                     catIcon,
                     color: catColor,
-                    size: 24,
+                    size: isDesktop ? 28 : 24,
                   ),
                 ),
-                const SizedBox(width: 16),
+                SizedBox(width: isDesktop ? 20 : 16),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         expense.title,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: isDesktop ? 18 : 16,
+                        ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         "Paid by $payerName • ${expense.categoryName} • ${DateFormat.MMMd().format(expense.date)}",
-                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: isDesktop ? 14 : 13,
+                        ),
                       ),
 
                     ],
@@ -105,10 +113,10 @@ class ExpenseTile extends StatelessWidget {
                   children: [
                     Text(
                       "₹${expense.amount.toStringAsFixed(2)}",
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                        color: Color(0xFF00695C), // Consistent Dark Teal
+                        fontSize: isDesktop ? 18 : 16,
+                        color: const Color(0xFF00695C), // Consistent Dark Teal
                       ),
                     ),
                   ],

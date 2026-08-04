@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:email_validator/email_validator.dart';
 import '../services/auth_service.dart';
+import '../widgets/responsive_center.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
   const ForgotPasswordScreen({super.key});
@@ -59,9 +60,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       child: Scaffold(
         appBar: AppBar(),
         body: SafeArea(
-          child: Center(
+          child: ResponsiveCenter(
+            maxWidth: 500,
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             child: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Card(
                 child: Padding(
                   padding: const EdgeInsets.all(24),
