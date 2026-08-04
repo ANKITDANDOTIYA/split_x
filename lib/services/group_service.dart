@@ -786,7 +786,55 @@ class GroupService extends ChangeNotifier {
     notifyListeners();
     return null; // Success
   }
+  /// Updates user profile name & photo across ALL in-memory groups & Hive cache in real-time
+  Future<void> updateUserProfileData({
+    required String userId,
+    required String newName,
+    String? photoUrl,
+  }) async {
+    bool updatedAny = false;
 
+    for (int gIndex = 0; gIndex < _groups.length; gIndex++) {
+      final group = _groups[gIndex];
+      bool groupUpdated = false;
+      final updatedParticipants = <Participant>[];
 
+      for (final p in group.participants) {
+        if (p.userId == userId || p.id == userId) {
+          updatedParticipants.add(
+            Participant(
+              id: p.id,
+              name: newName,
+              email: p.email,
+              phone: p.phone,
+              contactId: p.contactId,
+              userId: p.userId,
+            ),
+          );
+          groupUpdated = true;
+        } else {
+          updatedParticipants.add(p);
+        }
+      }
+
+      if (groupUpdated) {
+        final updatedGroup = Group(
+          id: group.id,
+          name: group.name,
+          participants: updatedParticipants,
+          expenses: group.expenses,
+          settlements: group.settlements,
+          createdAt: group.createdAt,
+        );
+        _groups[gIndex] = updatedGroup;
+        await _storageService.addGroup(updatedGroup);
+        updatedAny = true;
+      }
+    }
+
+    if (updatedAny) {
+      notifyListeners();
+    }
+  }
 }
 

@@ -29,6 +29,19 @@ class AuthService extends ChangeNotifier {
     });
   }
 
+  /// Reload current user from Firebase Auth & notify all listeners app-wide
+  Future<void> refreshUser() async {
+    final user = _auth.currentUser;
+    if (user != null) {
+      try {
+        await user.reload();
+      } catch (e) {
+        debugPrint("Error reloading user in AuthService: $e");
+      }
+      notifyListeners();
+    }
+  }
+
   Future<void> updateFCMToken() async {
   final user = _auth.currentUser;
   if (user == null) return;

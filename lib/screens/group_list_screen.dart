@@ -7,6 +7,7 @@ import '../services/group_service.dart';
 // import '../services/auth_service.dart';
 import '../models/group.dart';
 import 'group_detail_screen.dart';
+import 'profile_screen.dart';
 import '../widgets/dialogs/logout_dialog.dart';
 import '../widgets/dialogs/delete_group_dialog.dart';
 import '../widgets/dialogs/add_group.dart';
@@ -108,6 +109,27 @@ class _GroupListScreenState extends State<GroupListScreen>
 
                 // 🆕 Styled action buttons
                 actions: [
+                  // PROFILE BUTTON
+                  Container(
+                    margin: const EdgeInsets.only(right: 6),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.15),
+                      shape: BoxShape.circle,
+                    ),
+                    child: IconButton(
+                      tooltip: "User Profile",
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProfileScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.person_outline_rounded),
+                    ),
+                  ),
+
                   // ADD GROUP BUTTON
                   Container(
                     margin: const EdgeInsets.only(right: 6),
@@ -117,22 +139,45 @@ class _GroupListScreenState extends State<GroupListScreen>
                     ),
                     child: IconButton(
                       tooltip: "Add group",
-          onPressed: () => showAddGroupBottomSheet(context),
-
-          icon: const Icon(Icons.add_rounded),
+                      onPressed: () => showAddGroupBottomSheet(context),
+                      icon: const Icon(Icons.add_rounded),
                     ),
                   ),
 
-                  // LOGOUT MENU
+                  // MORE OPTIONS MENU
                   PopupMenuButton<String>(
                     tooltip: "More options",
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
                     onSelected: (value) {
-                      if (value == 'logout') showLogoutBottomSheet(context);
+                      if (value == 'profile') {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProfileScreen(),
+                          ),
+                        );
+                      } else if (value == 'logout') {
+                        showLogoutBottomSheet(context);
+                      }
                     },
                     itemBuilder: (_) => [
+                      PopupMenuItem(
+                        value: 'profile',
+                        child: Row(
+                          children: const [
+                            Icon(Icons.person_outline_rounded, color: Colors.blueAccent),
+                            SizedBox(width: 10),
+                            Text(
+                              "My Profile",
+                              style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       PopupMenuItem(
                         value: 'logout',
                         child: Row(

@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'services/group_service.dart';
 import 'services/auth_service.dart';
+import 'providers/profile_provider.dart';
 import 'storage/storage_service.dart';
 import 'screens/group_list_screen.dart';
 import 'screens/login_screen.dart';
@@ -45,6 +46,7 @@ void main() async {
         // AuthService ko hamesha provide karein taaki wrapper crash na ho
         ChangeNotifierProvider(create: (_) => AuthService()),
         ChangeNotifierProvider(create: (_) => GroupService()..loadGroups()),
+        ChangeNotifierProvider(create: (_) => ProfileProvider()),
       ],
       child: MyApp(firebaseReady: firebaseReady, firebaseError: firebaseError),
     ),
