@@ -1,334 +1,331 @@
-# 💰 Split Expenses - Mini Splitwise
+# 💸 SplitX
 
 <div align="center">
 
-![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)
-![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)
-![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)
+![SplitX Logo](assets/images/app_logo.png)
 
-**A beautiful and intuitive expense splitting application built with Flutter**
+### **Smart Expense Sharing, Bill Splitting & Group Settlements**
 
-[Features](#-features) • [Screenshots](#-screenshots) • [Installation](#-installation) • [Usage](#-usage) • [Architecture](#-architecture) • [Contributing](#-contributing)
+A modern, cross-platform financial application built with Flutter, Provider, Firebase Cloud Sync, FCM Notifications, and Hive local storage.
+
+[![Flutter](https://img.shields.io/badge/Flutter-02569B?style=for-the-badge&logo=flutter&logoColor=white)](https://flutter.dev)
+[![Dart](https://img.shields.io/badge/Dart-0175C2?style=for-the-badge&logo=dart&logoColor=white)](https://dart.dev)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com)
+[![Material 3](https://img.shields.io/badge/Material_3-757575?style=for-the-badge&logo=materialdesign&logoColor=white)](https://m3.material.io)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://opensource.org/licenses/MIT)
+[![GitHub Stars](https://img.shields.io/github/stars/ANKITDANDOTIYA/split_x?style=for-the-badge&color=gold)](https://github.com/ANKITDANDOTIYA/split_x/stargazers)
+
+[Key Highlights](#-project-highlights) • [Features](#-features) • [Tech Stack](#-tech-stack) • [Folder Structure](#-folder-structure) • [Installation](#-installation) • [Firebase Setup](#-firebase-configuration) • [Deployment](#-deployment) • [License](#-license)
 
 </div>
 
 ---
 
-## 📖 About
+## 🌟 Project Highlights
 
-**Split Expenses** is a modern, feature-rich mobile application that simplifies the process of splitting expenses among friends, roommates, or groups. Inspired by Splitwise, this app provides an elegant solution for tracking shared expenses and settling debts.
+- ⚡ **Offline-First Hybrid Sync Architecture**: Instant local reads/writes powered by **Hive**, seamlessly backed up to **Cloud Firestore** in real-time.
+- 🔔 **Real-Time Push Notifications**: Powered by **Firebase Cloud Messaging (FCM)** and Google OAuth2 v1 HTTP API (`NotificationService`) to send instant activity notifications.
+- 📱 **Pixel-Perfect Multi-Platform Experience**: Mobile-first design for Android and iOS, with an expanded multi-column layout for Flutter Web & Desktop viewports (`width >= 900px`).
+- 📊 **Interactive Analytics Dashboard**: Beautiful financial analytics built with **`fl_chart`**, featuring spending breakdown charts, top spenders, peak spending days, and daily averages.
+- 🤝 **Smart Settlement Engine**: Calculates exact minimum payment paths between participants to settle debts effortlessly.
+- 🎨 **Adaptive Material Design 3 Theme**: Full Dark and Light mode support with curated emerald green fintech palette and dynamic Google Fonts (`Outfit`).
 
-Whether you're planning a trip with friends, sharing rent with roommates, or managing group expenses, Split Expenses makes it easy to keep track of who owes what and ensures everyone pays their fair share.
+---
+
+## 📱 Screenshots
+
+> [!NOTE]
+> Replace the placeholder image URLs below with your repository's actual screenshots.
+
+| Home / Groups List | Expense View | Analytics Dashboard |
+| :---: | :---: | :---: |
+| ![Group List](https://via.placeholder.com/300x600/0F766E/FFFFFF?text=Groups+List) | ![Expense List](https://via.placeholder.com/300x600/16A34A/FFFFFF?text=Expenses) | ![Analytics](https://via.placeholder.com/300x600/0F766E/FFFFFF?text=Analytics) |
+
+| Settlement View | Profile & Settings | Dark Mode |
+| :---: | :---: | :---: |
+| ![Settlements](https://via.placeholder.com/300x600/16A34A/FFFFFF?text=Settlements) | ![Profile](https://via.placeholder.com/300x600/0F766E/FFFFFF?text=Profile) | ![Dark Mode](https://via.placeholder.com/300x600/1E1E1E/FFFFFF?text=Dark+Mode) |
+
+---
 
 ## ✨ Features
 
-### 🎯 Core Features
-- **Group Management**: Create and manage multiple expense groups
-- **Expense Tracking**: Add, edit, and delete expenses with detailed breakdowns
-- **Smart Splitting**: Automatically split expenses equally among participants
-- **Participant Management**: Add participants from contacts or manually
-- **Balance Calculation**: Real-time calculation of who owes whom
-- **Expense Details**: View detailed breakdown of each expense
-- **Summary View**: Comprehensive overview of all balances and settlements
+### 🔐 Authentication & Security
+- **Email & Password Authentication**: Powered by Firebase Auth.
+- **Email Verification Guard**: Verified email requirement before account access (`VerifyEmailScreen`).
+- **Password Reset Flow**: Self-service password recovery email trigger (`ForgotPasswordScreen`).
 
-### 🔐 Authentication & Sync
-- **Firebase Authentication**: Secure email/password authentication
-- **Email Verification**: Verify user email addresses for security
-- **Cloud Sync**: Sync data across devices using Cloud Firestore
-- **Offline Support**: Local storage with Hive for offline functionality
+### 🔔 Push Notifications & Messaging
+- **Firebase Cloud Messaging (FCM)**: Real-time background & foreground push notification alerts (`firebase_messaging`).
+- **Google OAuth2 Service Account Integration**: Direct HTTP v1 API integration for triggering group expense alerts (`googleapis_auth` & `notification_service.dart`).
 
-### 🎨 User Experience
-- **Beautiful UI**: Modern, clean interface with Material Design
-- **Dark Mode**: Full dark mode support
-- **Google Fonts**: Beautiful typography with Google Fonts integration
-- **Smooth Animations**: Polished animations and transitions
-- **Contact Integration**: Import participants directly from phone contacts
-- **Intuitive Navigation**: Easy-to-use navigation and user flows
+### 👥 Group & Member Management
+- **Custom Expense Groups**: Create, view, and manage multi-member groups.
+- **Contact Book Integration**: Import participants directly from phone contacts via `flutter_contacts` and `permission_handler`.
+- **Manual Participant Addition**: Add members via email or name without requiring device contacts.
 
-### 📱 Additional Features
-- **Multi-platform**: Works on Android, iOS, Web, Windows, macOS, and Linux
-- **Data Persistence**: Local storage ensures data is never lost
-- **Email Validation**: Built-in email validation for user registration
-- **Permission Handling**: Proper permission management for contacts access
-- **Responsive Design**: Adapts to different screen sizes
+### 💰 Bill Splitting & Settle Up
+- **Equal & Custom Bill Splitting**: Split expenses evenly or allocate exact custom amounts per participant.
+- **Categorized Expenses**: Tag expenses with icons and categories (Food, Travel, Shopping, Bills, etc.).
+- **Settle Up Bottom Sheet**: Record partial or full debt settlements between group members.
+- **Settlement History**: Full log of historical payments and balances.
 
-## 📥 Download & Try Now!
+### 📊 Smart Financial Analytics
+- **Spending Distribution Charts**: Visual pie charts and line charts using `fl_chart`.
+- **Peak Day & Daily Average Calculation**: Instant insight into peak spending dates and daily expenditure rates.
+- **Highest Spender & Largest Expense Highlights**: Automatically surfaced key metrics.
 
-### 🎉 Latest Release: v1.0.0
+### 🎨 Customization & Responsive Web
+- **System / Dark / Light Theme Switching**: Instant theme toggle stored in local preferences.
+- **Responsive Web & Desktop Layout**: Dedicated multi-column GridView, desktop scaling, hover states, and maximum container widths for web viewports (`>= 900px`).
 
-Want to try the app right away? Download the latest release!
+---
 
-#### 🤖 For Android Users
+## 🛠️ Tech Stack
 
-**👉 [Go to Releases Page to Download APK](https://github.com/ANKITDANDOTIYA)** 
+| Domain | Technology / Package | Description |
+| :--- | :--- | :--- |
+| **Framework** | [Flutter](https://flutter.dev) (v3.8+) | Cross-platform UI Toolkit |
+| **Language** | [Dart](https://dart.dev) (v3.8+) | Object-oriented client-optimized language |
+| **State Management** | [Provider](https://pub.dev/packages/provider) | Pragmatic state management & DI |
+| **Backend & Messaging** | [Firebase Auth](https://pub.dev/packages/firebase_auth), [Cloud Firestore](https://pub.dev/packages/cloud_firestore) & [FCM](https://pub.dev/packages/firebase_messaging) | Authentication, Cloud Database & Push Notifications |
+| **OAuth2 & HTTP** | [googleapis_auth](https://pub.dev/packages/googleapis_auth) & [http](https://pub.dev/packages/http) | Google HTTP v1 API OAuth2 authentication |
+| **Local Storage** | [Hive](https://pub.dev/packages/hive) & [Hive Flutter](https://pub.dev/packages/hive_flutter) | Fast, offline NoSQL key-value database |
+| **Charts** | [fl_chart](https://pub.dev/packages/fl_chart) | Highly customizable Flutter chart library |
+| **Contacts & Rights** | [flutter_contacts](https://pub.dev/packages/flutter_contacts) & [permission_handler](https://pub.dev/packages/permission_handler) | Native contact access & permission management |
+| **Typography** | [Google Fonts](https://pub.dev/packages/google_fonts) | Custom Google Fonts (`Outfit`) |
 
-Once on the Releases page:
-1. Look for **v1.0.0** release
-2. Download `split-expenses-v1.0.0.apk` (50.2 MB)
-3. Install on your Android device
+---
 
-#### 📋 Quick Install Steps
-1. Download the APK file from the Releases page
-2. Enable "Install from Unknown Sources" in your Android settings
-3. Open the APK and tap Install
-4. Start splitting expenses!
+## 📂 Folder Structure
 
-📖 **[Full Installation Guide](./releases/INSTALLATION_GUIDE.md)** | 📝 **[Release Notes](./releases/RELEASE_NOTES_v1.0.0.md)**
+```
+split_expenses/
+├── assets/
+│   ├── images/
+│   │   └── app_logo.png             # Master SplitX logo asset
+│   └── service-account.json         # Google OAuth2 FCM service account credentials
+├── android/                         # Android native project configuration
+├── ios/                             # iOS native project configuration
+├── web/                             # Web configuration, index.html & icons
+│   ├── favicon.png
+│   ├── index.html
+│   ├── manifest.json
+│   └── icons/
+├── lib/
+│   ├── firebase_options.dart        # Auto-generated Firebase CLI configuration
+│   ├── main.dart                    # Application entrypoint & AuthWrapper
+│   ├── models/                      # Hive & Firestore data models
+│   │   ├── expense.dart
+│   │   ├── group.dart
+│   │   ├── participant.dart
+│   │   └── settlement.dart
+│   ├── providers/                   # State Providers
+│   │   ├── profile_provider.dart
+│   │   └── theme_provider.dart
+│   ├── screens/                     # UI Screen Views
+│   │   ├── add_expense_screen.dart
+│   │   ├── analytics_screen.dart
+│   │   ├── expense_detail_screen.dart
+│   │   ├── forgot_password_screen.dart
+│   │   ├── group_detail_screen.dart
+│   │   ├── group_list_screen.dart
+│   │   ├── login_screen.dart
+│   │   ├── profile_screen.dart
+│   │   ├── register_screen.dart
+│   │   ├── summary_screen.dart
+│   │   └── verify_email_screen.dart
+│   ├── services/                    # Business & Storage Service Layer
+│   │   ├── auth_service.dart
+│   │   ├── contact_service.dart
+│   │   ├── firebase_service.dart
+│   │   ├── firestore_service.dart
+│   │   ├── group_service.dart
+│   │   ├── notification_service.dart# FCM Push Notification Service (v1 API)
+│   │   └── theme_service.dart
+│   ├── storage/                     # Hive NoSQL persistence
+│   │   └── storage_service.dart
+│   ├── theme/                       # AppTheme light & dark themes
+│   │   └── app_theme.dart
+│   └── widgets/                     # Reusable UI Widgets & Dialogs
+│       ├── add_participant_dialog.dart
+│       ├── category_helper.dart
+│       ├── expense_tile.dart
+│       ├── responsive_center.dart
+│       ├── settle_up_bottom_sheet.dart
+│       └── settlement_history_tile.dart
+├── pubspec.yaml                     # Dependencies & asset declarations
+└── README.md
+```
 
-> **Note**: If you don't see any releases yet, the APK is being prepared. Check back soon!  
-> **Coming Soon**: iOS, Web, and Desktop versions
+---
 
-
-
-## 🚀 Getting Started
+## ⚡ Installation
 
 ### Prerequisites
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) (`>= 3.8.1`)
+- [Dart SDK](https://dart.dev/get-dart) (`>= 3.8.1`)
+- Android Studio / VS Code with Flutter extension
+- Firebase Project setup
 
-Before you begin, ensure you have the following installed:
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (^3.8.1)
-- [Dart SDK](https://dart.dev/get-dart) (^3.8.1)
-- [Android Studio](https://developer.android.com/studio) or [VS Code](https://code.visualstudio.com/)
-- [Git](https://git-scm.com/)
+### Steps
 
-### Installation
-
-1. **Clone the repository**
+1. **Clone the Repository**
    ```bash
    git clone https://github.com/ANKITDANDOTIYA/split_x.git
    cd split_x
    ```
 
-2. **Install dependencies**
+2. **Install Dependencies**
    ```bash
    flutter pub get
    ```
 
-3. **Generate Hive adapters**
+3. **Generate Hive Code Adapters**
    ```bash
    flutter pub run build_runner build --delete-conflicting-outputs
    ```
 
-4. **Set up Firebase** (Optional - for authentication and cloud sync)
-   
-   Follow the instructions in [FIREBASE_SETUP.md](FIREBASE_SETUP.md) to configure Firebase for your project.
-
-5. **Run the app**
+4. **Run Locally**
    ```bash
    flutter run
    ```
 
-## 📱 Usage
+---
 
-### Creating a Group
-1. Tap the **+** button on the home screen
-2. Enter a group name
-3. Add participants from contacts or manually
-4. Tap "Create" to create the group
+## 🔥 Firebase Configuration
 
-### Adding an Expense
-1. Open a group
-2. Tap the **+** button
-3. Enter expense details:
-   - Description
-   - Amount
-   - Select who paid
-   - Choose participants to split with
-4. Tap "Add Expense"
+This app uses Firebase for Authentication, Cloud Firestore, Cloud Messaging (FCM), and Hosting.
 
-### Viewing Balances
-1. Open a group to see the total spending
-2. Tap the "Summary" tab to view:
-   - Individual balances
-   - Who owes whom
-   - Settlement suggestions
+1. **Create a Firebase Project** at [Firebase Console](https://console.firebase.google.com/).
+2. Enable **Email/Password** under Authentication -> Sign-in method.
+3. Enable **Cloud Firestore Database** in production mode.
+4. Enable **Cloud Messaging (FCM)** in project settings.
+5. Run FlutterFire CLI inside the project directory:
+   ```bash
+   flutterfire configure
+   ```
+   This updates `lib/firebase_options.dart` automatically.
 
-### Managing Participants
-1. Open a group
-2. Tap on a participant to:
-   - Edit their name
-   - View their expenses
-   - Delete them (if not involved in expenses)
+---
 
-## 🏗️ Architecture
+## 🚀 Running & Building
 
-### Project Structure
-```
- 
-```
+### Run Commands
 
-### Tech Stack
-
-| Technology | Purpose |
-|------------|---------|
-| **Flutter** | Cross-platform UI framework |
-| **Provider** | State management |
-| **Hive** | Local NoSQL database |
-| **Firebase Auth** | User authentication |
-| **Cloud Firestore** | Cloud database |
-| **Google Fonts** | Custom typography |
-| **Flutter Contacts** | Contact integration |
-| **Permission Handler** | Runtime permissions |
-| **Email Validator** | Email validation |
-| **UUID** | Unique ID generation |
-| **Intl** | Internationalization & formatting |
-
-### Design Patterns
-- **Provider Pattern**: For state management
-- **Service Layer**: Separation of business logic
-- **Repository Pattern**: Data access abstraction
-- **MVVM**: Model-View-ViewModel architecture
-
-## 🔧 Configuration
-
-### Firebase Setup
-To enable authentication and cloud sync:
-1. Create a Firebase project at [Firebase Console](https://console.firebase.google.com/)
-2. Add your app to the Firebase project
-3. Download configuration files:
-   - `google-services.json` for Android
-   - `GoogleService-Info.plist` for iOS
-4. Enable Email/Password authentication in Firebase Console
-5. Set up Cloud Firestore database
-
-Detailed instructions: [FIREBASE_SETUP.md](FIREBASE_SETUP.md)
-
-### Permissions
-
-#### Android
-Add to `android/app/src/main/AndroidManifest.xml`:
-```xml
-<uses-permission android:name="android.permission.READ_CONTACTS" />
-<uses-permission android:name="android.permission.INTERNET" />
-```
-
-#### iOS
-Add to `ios/Runner/Info.plist`:
-```xml
-<key>NSContactsUsageDescription</key>
-<string>We need access to your contacts to add participants</string>
-```
-
-## 📦 Dependencies
-
-```yaml
-dependencies:
-  flutter:
-    sdk: flutter
-  cupertino_icons: ^1.0.8
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  provider: ^6.1.2
-  uuid: ^4.5.1
-  intl: ^0.19.0
-  google_fonts: ^6.3.2
-  flutter_contacts: ^1.1.7
-  permission_handler: ^11.3.1
-  email_validator: ^2.1.17
-  firebase_core: ^3.6.0
-  firebase_auth: ^5.3.1
-  cloud_firestore: ^5.4.4
-
-dev_dependencies:
-  flutter_test:
-    sdk: flutter
-  flutter_lints: ^5.0.0
-  build_runner: ^2.4.14
-  hive_generator: ^2.0.1
-```
-
-## 🛠️ Building for Production
-
-### Android
 ```bash
+# Run on connected mobile device or emulator
+flutter run
+
+# Run on Google Chrome (Web)
+flutter run -d chrome
+```
+
+### Production Build Commands
+
+```bash
+# Build Android APK
 flutter build apk --release
-# or for app bundle
+
+# Build Android App Bundle
 flutter build appbundle --release
-```
 
-### iOS
-```bash
-flutter build ios --release
-```
-
-### Web
-```bash
+# Build Flutter Web Production Bundle
 flutter build web --release
 ```
 
-### Windows
+---
+
+## 🌐 Deployment (Firebase Hosting)
+
+Deploy the Web application to Firebase Hosting:
+
 ```bash
-flutter build windows --release
+# Initialize Firebase Hosting in project root
+firebase init hosting
+
+# Build Web distribution files
+flutter build web --release
+
+# Deploy to live production URL
+firebase deploy --only hosting
 ```
 
-## 🧪 Testing
+---
 
-Run tests with:
-```bash
-flutter test
+## 🏛️ Project Architecture
+
+SplitX follows a clean **Service-Provider (MVVM)** architecture pattern:
+
 ```
+[ UI Screens / Views ]
+         │
+         ▼
+[ Providers & ChangeNotifiers ] (State Management)
+         │
+         ▼
+[ Services Layer ] (AuthService, GroupService, FirestoreService, NotificationService)
+    ┌────┼──────────────────────────┬────────────────────────┐
+    ▼    ▼                          ▼                        ▼
+[ Hive Local DB ]          [ Cloud Firestore ]       [ Firebase Messaging (FCM) ]
+ (Offline Persistence)       (Real-time Sync)             (Push Notifications)
+```
+
+---
+
+## 📐 Responsive Support Matrix
+
+| Platform | Support Level | Layout Adaptation |
+| :--- | :---: | :--- |
+| **Android** | ✅ Native | Standard single-column mobile presentation |
+| **iOS** | ✅ Native | Native iOS gestures, navigation & modal sheets |
+| **Flutter Web** | ✅ Web Production | Responsive max-width containers & multi-column grids (`width >= 900px`) |
+| **Desktop** | ✅ Windows/macOS/Linux | Constrained width center containers with mouse hover feedback |
+
+---
+
+## 🚀 Future Improvements
+
+- [ ] Multi-currency conversion rate integration.
+- [ ] Receipt OCR image scanning for automated bill parsing.
+- [ ] Export group settlement statements to PDF/CSV.
+- [ ] In-app direct payment gateway integration.
+
+---
 
 ## 🤝 Contributing
 
-Contributions are welcome! Here's how you can help:
+Contributions are welcome! Follow these steps:
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork the project repository.
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`).
+3. Commit your changes (`git commit -m 'Add AmazingFeature'`).
+4. Push to the branch (`git push origin feature/AmazingFeature`).
+5. Open a Pull Request.
 
-### Code Style
-- Follow [Effective Dart](https://dart.dev/guides/language/effective-dart) guidelines
-- Use meaningful variable and function names
-- Add comments for complex logic
-- Keep functions small and focused
+---
 
-## 📝 License
+## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Distributed under the **MIT License**. See `LICENSE` for details.
+
+---
 
 ## 👨‍💻 Author
 
 **Ankit Dandotiya**
 - GitHub: [@ANKITDANDOTIYA](https://github.com/ANKITDANDOTIYA)
 
-## 🙏 Acknowledgments
+---
 
-- Inspired by [Splitwise](https://www.splitwise.com/)
-- Built with [Flutter](https://flutter.dev/)
-- Icons from [Material Design Icons](https://material.io/resources/icons/)
-- Fonts from [Google Fonts](https://fonts.google.com/)
+## 🌐 Live Demo & Downloads
 
-## 📞 Support
-
-If you have any questions or need help, feel free to:
-- Open an issue on GitHub
-- Contact me through GitHub
-
-## 🗺️ Roadmap
-
-### Planned Features
-- [ ] Multiple currency support
-- [ ] Expense categories and tags
-- [ ] Receipt image upload
-- [ ] Export data to CSV/PDF
-- [ ] Push notifications
-- [ ] Group chat functionality
-- [ ] Recurring expenses
-- [ ] Advanced splitting options (percentage, shares)
-- [ ] Payment integration
-- [ ] Multi-language support
-
-## 📊 Project Status
-
-This project is actively maintained and under development. New features and improvements are added regularly.
+- 🌐 **Live Web App**: [https://split-x.web.app](https://split-expenses-70f9a.web.app/)
+- 🤖 **Download Android APK**: [GitHub Releases Page](https://github.com/ANKITDANDOTIYA/split_x/releases)
 
 ---
 
 <div align="center">
 
-**If you find this project useful, please consider giving it a ⭐️**
-
-Made with ❤️ using Flutter
+**If you like this project, please give it a ⭐️ on GitHub!**
 
 </div>
